@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
 using System.Xml;
 
 namespace VKAudioPlayer.domain
@@ -13,9 +13,14 @@ namespace VKAudioPlayer.domain
 
         private XmlDocument ExecuteCommand(string name, NameValueCollection qs)
         {
+            string param = String.Empty;
+
+            for (int i = 0; i < qs.Count; i++)
+            {
+                param += "&" + qs.Keys[i] + "=" + qs[i];
+            }
             var result = new XmlDocument();
-            result.Load(String.Format("https://api.vkontakte.ru/method/{0}.xml?access_token={1}&{2}", name, AccessToken,
-                String.Join("&", from item in qs.AllKeys select item + "=" + qs[item])));
+            result.Load(String.Format("https://api.vkontakte.ru/method/{0}.xml?access_token={1}{2}", name, AccessToken, param));
             return result;
         }
 

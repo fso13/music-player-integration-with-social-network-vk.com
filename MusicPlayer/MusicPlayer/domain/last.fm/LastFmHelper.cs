@@ -14,7 +14,13 @@ namespace VKAudioPlayer.domain
             try
             {
                 var result = new XmlDocument();
-                result.Load(String.Format("http://ws.audioscrobbler.com/2.0/?method={0}&{2}&api_key={1}", name, ApiKey, String.Join("&", from item in qs.AllKeys select item + "=" + qs[item])));
+                string param = String.Empty;
+
+                for (int i = 0; i < qs.Count; i++)
+                {
+                    param += "&" + qs.Keys[i] + "=" + qs[i];
+                }
+                    result.Load(String.Format("http://ws.audioscrobbler.com/2.0/?method={0}{2}&api_key={1}", name, ApiKey, param));
                 return result;
             }
             catch (Exception e)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -11,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VKAudioPlayer.domain;
+
 
 namespace MusicPlayer
 {
@@ -23,5 +26,6 @@ namespace MusicPlayer
         {
             InitializeComponent();
         }
+             
     }
 }
