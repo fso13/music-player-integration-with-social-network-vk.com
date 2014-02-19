@@ -6,7 +6,7 @@ using VKAudioPlayer.domain;
 
 namespace MusicPlayer.local
 {
-    class LocalAudio : Audio
+    class LocalAudio
     {
         private string Artist { get; set; }
         private string Title { get; set; }

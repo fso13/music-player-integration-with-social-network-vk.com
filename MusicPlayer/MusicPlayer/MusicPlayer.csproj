@@ -14,6 +14,8 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <Utf8Output>true</Utf8Output>
+    <ExpressionBlendVersion>4.0.20525.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -53,6 +55,7 @@
     <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -130,8 +133,27 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Image\" />
     <Folder Include="util\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\prev1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\play1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\stop1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\replay1.png" />
+    <Resource Include="Image\volum1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\next1.png" />
+    <Resource Include="Image\pause1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\random1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

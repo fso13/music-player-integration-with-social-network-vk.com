@@ -26,6 +26,23 @@ namespace MusicPlayer
         {
             InitializeComponent();
         }
+
+        private void Window_MouseLeftButtonDown_1(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var item = new TabItem{Header = "Test"};
+            var bc = new BrushConverter();
+            item.Foreground = (Brush)bc.ConvertFrom("White"); 
+            PlayListTabs.Items.Add(item);
+			TabItem t = (TabItem)PlayListTabs.Items[0];
+			ListBox l = (ListBox)t.FindName("PlayList");
+			l.Items.Add(new Audio("Ария","Ария - Я свободен","1.", "проал",true,"3:06"));
+			
+        }
              
     }
 }
