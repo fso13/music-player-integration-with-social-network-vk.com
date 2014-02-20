@@ -142,6 +142,14 @@
     <Folder Include="util\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Image\add1.png" />
+    <Resource Include="Image\add2.png" />
+    <Resource Include="Image\any1.png" />
+    <Resource Include="Image\any2.png" />
+    <Resource Include="Image\delete1.png" />
+    <Resource Include="Image\delete2.png" />
+    <Resource Include="Image\new_pl.png" />
+    <Resource Include="Image\new_pl2.png" />
     <Content Include="Image\next1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -151,15 +159,21 @@
     <Content Include="Image\play1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Image\pl_prev1.png" />
+    <Resource Include="Image\pl_prev2.png" />
+    <Resource Include="Image\pl_next1.png" />
     <Content Include="Image\prev1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Image\random1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Image\random2.png" />
     <Content Include="Image\replay1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Image\sort1.png" />
+    <Resource Include="Image\sort2.png" />
     <Content Include="Image\stop1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

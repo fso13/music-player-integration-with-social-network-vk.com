@@ -280,39 +280,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style x:Key="SimpleCheckBox" TargetType="{x:Type CheckBox}">
-            <Setter Property="SnapsToDevicePixels" Value="true"/>
-            <Setter Property="FocusVisualStyle" Value="{DynamicResource CheckBoxFocusVisual}"/>
-            <Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type CheckBox}">
-
-                        <!-- BulletDecorator is used to provide baseline alignment between the checkmark and the Content -->
-                        <BulletDecorator Background="Transparent" Margin="0" Width="7" Height="7">
-                            <BulletDecorator.Bullet>
-                                <Grid Width="13" Height="13">
-                                    <Ellipse Margin="0,0.125,6,5.875" Stroke="{DynamicResource GlyphBrush}" StrokeThickness="7" Width="7" Height="7"/>
-                                    <Ellipse x:Name="ellipse" Margin="0,0.125,6,5.875" Stroke="#FFB4B4B4" StrokeThickness="7" Width="7" Height="7" RenderTransformOrigin="0.179,-0.161"/>
-                                </Grid>
-                            </BulletDecorator.Bullet>
-                        </BulletDecorator>
-
-                        <!-- This uses Visibility to hide and show the CheckMark on IsChecked -->
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="false">
-                                <Setter Property="Stroke" TargetName="ellipse" Value="{x:Null}"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="true"/>
-                            <Trigger Property="IsPressed" Value="true"/>
-                            <Trigger Property="IsEnabled" Value="false"/>
-                        </ControlTemplate.Triggers>
-
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
         <Style x:Key="ScrollBarStyle1" TargetType="{x:Type ScrollBar}">
             <Setter Property="Background" Value="{StaticResource VerticalScrollBarBackground}"/>
             <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
@@ -410,10 +377,11 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <Rectangle x:Name="rectangle" Grid.ColumnSpan="2" Grid.Column="1" Fill="{x:Null}" HorizontalAlignment="Stretch" Margin="0" Grid.RowSpan="2" Stroke="{x:Null}" Width="Auto"/>
-                                <TextBlock x:Name="TimeText" Grid.Column="2" HorizontalAlignment="Right" Height="20" TextWrapping="Wrap" Text="{Binding Duration}" VerticalAlignment="Top" Width="50" Margin="0,0,5,0" Foreground="Gray" FontFamily="Segoe UI Light" FontSize="14.667" TextAlignment="Right"/>
+                                <TextBlock x:Name="TimeText" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Height="20" TextWrapping="Wrap" Text="{Binding Duration}" VerticalAlignment="Top" Width="50" Margin="0,0,5,0" Foreground="Gray" FontFamily="Segoe UI Light" FontSize="14.667" TextAlignment="Right"/>
                                 <TextBlock x:Name="TitleText" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="8,0,0,0" TextWrapping="Wrap" Text="{Binding Title}" VerticalAlignment="Top" Width="226.35" d:LayoutOverrides="GridBox" Foreground="Gray" FontFamily="Segoe UI Light" FontSize="14.667"/>
                                 <TextBlock x:Name="InfoText"  Grid.Column="1" HorizontalAlignment="Stretch" Height="16" Margin="3.625,0,8,0" TextWrapping="Wrap" Text="{Binding Info}" VerticalAlignment="Top" Width="Auto" Grid.Row="1" Foreground="Gray" FontSize="13.333" FontFamily="Segoe UI Light" Grid.ColumnSpan="2"/>
-                                <CheckBox Content="CheckBox" IsChecked="{Binding IsPlayed}" Margin="6.5,3,2.167,2" Style="{DynamicResource CheckBoxStyle1}" Grid.Row="0" d:LayoutOverrides="HorizontalAlignment"/>
+                                <CheckBox Content="CheckBox" IsChecked="{Binding IsPlayed}" Margin="6.5,3,2.167,2" Style="{DynamicResource CheckBoxStyle1}" Grid.Row="0"
+                                          Grid.Column="0" d:LayoutOverrides="HorizontalAlignment"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -448,33 +416,6 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <Rectangle Margin="14,0,0,0" SnapsToDevicePixels="true" Stroke="Black" StrokeThickness="1" StrokeDashArray="1 2"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style x:Key="RadioButtonStyle1" TargetType="{x:Type RadioButton}">
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-            <Setter Property="Background" Value="#F4F4F4"/>
-            <Setter Property="BorderBrush" Value="{StaticResource CheckBoxStroke}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type RadioButton}">
-                        <BulletDecorator Background="Transparent">
-                            <BulletDecorator.Bullet>
-                                <themes:BulletChrome BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" IsChecked="{TemplateBinding IsChecked}" IsRound="true" RenderMouseOver="{TemplateBinding IsMouseOver}" RenderPressed="{TemplateBinding IsPressed}" Width="12"/>
-                            </BulletDecorator.Bullet>
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </BulletDecorator>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="HasContent" Value="true">
-                                <Setter Property="FocusVisualStyle" Value="{StaticResource CheckRadioFocusVisual}"/>
-                                <Setter Property="Padding" Value="4,0,0,0"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -654,10 +595,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <LinearGradientBrush x:Key="HorizontalSliderTrackNormalBorder" EndPoint="0,1" StartPoint="0,0">
-            <GradientStop Color="#FFAEB1AF" Offset="0.1"/>
-            <GradientStop Color="White" Offset=".9"/>
-        </LinearGradientBrush>
         <SolidColorBrush x:Key="HorizontalSliderTrackNormalBackground" Color="#FFE7EAEA"/>
         <Style x:Key="SliderRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
             <Setter Property="OverridesDefaultStyle" Value="true"/>
@@ -1232,16 +1169,61 @@
     </Window.Resources>
     <Grid>
         <ToolBarPanel x:Name="OpacityPanel" HorizontalAlignment="Left" Height="5" Margin="0,94,0,0" VerticalAlignment="Top" Width="350"/>
-        <ToolBarPanel x:Name="EditPlaylistPanel" HorizontalAlignment="Left" Height="47" Margin="0,99,0,0" Width="350" Background="Red" VerticalAlignment="Top">
-            <Button Content="Button" HorizontalAlignment="Left" Height="28" Margin="184,0,0,0" Width="54" Click="Button_Click_1" FontFamily="Segoe UI Light"/>
-        </ToolBarPanel>
+        <ToolBarPanel x:Name="EditPlaylistPanel" HorizontalAlignment="Left" Height="47" Margin="0,99,0,0" Width="350" Background="Black" VerticalAlignment="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="110"/>
+                    <ColumnDefinition Width="37"/>
+                    <ColumnDefinition Width="33"/>
+                    <ColumnDefinition Width="36"/>
+                    <ColumnDefinition Width="34"/>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="41"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="playlist" Width="105.5" Foreground="White" FontFamily="Segoe UI Light" FontSize="34" TextAlignment="Left" Margin="4.5,0,0,0"/>
+                <Button Content="Button" Grid.Column="1" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="0,10,4,3.223">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Image/add1.png"/>
+                    </Button.Background>
+                </Button>
+                <Button Content="Button" Grid.Column="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="1,10,1,3.223">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Image/delete1.png"/>
+                    </Button.Background>
+                </Button>
+                <Button Content="Button" Grid.Column="3" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="0,10,16,3.223">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Image/pl_prev1.png"/>
+                    </Button.Background>
+                </Button>
+                <Button Content="Button" Grid.Column="4" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="0,10,3,3.223">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Image/new_pl.png"/>
+                    </Button.Background>
+                </Button>
+                <Button Content="Button" Grid.Column="5" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="2,10,4,3.223">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Image/pl_next1.png"/>
+                    </Button.Background>
+                </Button>
+                <Button Content="Button" Grid.Column="6" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="1,10,6,3.223">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Image/any1.png"/>
+                    </Button.Background>
+                </Button>
+                <Button Content="Button" Grid.Column="7" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="0,10,-4,3.223">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Image/sort1.png"/>
+                    </Button.Background>
+                </Button>
+            </Grid>
+        </ToolBarPanel>    
 
         <TabControl x:Name="PlayListTabs" ItemContainerStyle="{DynamicResource TabItemStyle1}" HorizontalAlignment="Left" Margin="0,146,0,59" Width="350" Style="{DynamicResource TabControlStyle1}">
             <TabItem Header="Default" Style="{DynamicResource TabItemStyle1}"  Foreground="White" FontSize="16" FontFamily="Segoe UI Light">
                 <Grid>
-                    <ListBox x:Name="PlayList" ItemContainerStyle="{DynamicResource ListBoxItemStyle1}" Background="Black" BorderBrush="Black" SelectedIndex="10" Foreground="#FF5D6655" Style="{DynamicResource ListBoxStyle1}">
-
-                    </ListBox>
+                    <ListBox x:Name="PlayList" ItemContainerStyle="{DynamicResource ListBoxItemStyle1}" Background="Black" BorderBrush="Black" SelectedIndex="10" Foreground="#FF5D6655" Style="{DynamicResource ListBoxStyle1}"/>
                 </Grid>
             </TabItem>
         </TabControl>
@@ -1278,7 +1260,7 @@
                 <Slider Grid.Row="6" Grid.Column="1" Margin="0,-0.5,-3,-0.5" Style="{DynamicResource SliderStyle1}" IsMoveToPointEnabled="True" Grid.ColumnSpan="12"/>
                 <Rectangle x:Name="PrevButton" Grid.Column="1" Fill="#FF1F1F1F" Grid.Row="7" Grid.ColumnSpan="12" Margin="0,0,-3,0"/>
                 <Slider Style="{DynamicResource SliderStyle1}" IsMoveToPointEnabled="True" Grid.Column="10" Grid.Row="5" Height="3" VerticalAlignment="Top" Width="59" HorizontalAlignment="Left" Grid.ColumnSpan="3" Value="5"/>
-                <TextBlock Grid.ColumnSpan="3" Grid.Column="2" TextWrapping="Wrap" Text="00 : 00" HorizontalAlignment="Left" Margin="1,0.247,0,0" Foreground="White" FontFamily="Segoe UI Symbol" FontSize="22.667"/>
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="2" TextWrapping="Wrap" Text="00 : 00" HorizontalAlignment="Left" Margin="1,0.247,0,0" Foreground="White" FontFamily="Segoe UI Symbol" FontSize="22.667"/>
                 <Button Content="Button" Grid.Column="2" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/prev1.png"/>
