@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace VKAudioPlayer.domain
 {
-    public class VkAudio
+    public class VkAudio : Audio
     {
         private string Artist { get; set; }
         private string Title { get; set; }
