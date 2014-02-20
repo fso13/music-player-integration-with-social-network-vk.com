@@ -107,8 +107,8 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Background" TargetName="Bd" Value="#FFBF3517"/>
-                                <Setter Property="BorderBrush" TargetName="Bd" Value="#FFBF3517"/>
+                                <Setter Property="Background" TargetName="Bd" Value="#FF1F1F1F"/>
+                                <Setter Property="BorderBrush" TargetName="Bd" Value="#FF1F1F1F"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="true">
                                 <Setter Property="Panel.ZIndex" Value="1"/>
@@ -1166,55 +1166,362 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="ButtonStyle3" TargetType="{x:Type Button}" BasedOn="{x:Null}">
+        	<Setter Property="FocusVisualStyle" Value="{DynamicResource SimpleButtonFocusVisual}"/>
+        	<Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
+        	<Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
+        	<Setter Property="Template">
+        		<Setter.Value>
+        			<ControlTemplate TargetType="{x:Type Button}">
+					
+					<!-- We use Grid as a root because it is easy to add more elements to customize the button -->
+        				<Grid x:Name="Grid">
+						
+        					<Ellipse x:Name="ellipse" Fill="{x:Null}" Margin="1.167,8,1.333,8"/>
+						
+        					<Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"/>
+						
+        					<!-- Content Presenter is where the text content etc is placed by the control -->
+        					<!-- The bindings are useful so that the control can be parameterized without editing the template -->
+        				</Grid>
+					
+					<!--Each state sets a brush on the Border in the template -->
+        				<ControlTemplate.Triggers>
+        					<Trigger Property="IsKeyboardFocused" Value="true"/>
+        					<Trigger Property="IsMouseOver" Value="true">
+        						<Setter Property="Background" TargetName="Border">
+        							<Setter.Value>
+        								<ImageBrush ImageSource="Image/add2.png" Stretch="Uniform"/>
+        							</Setter.Value>
+        						</Setter>
+        						<Setter Property="Fill" TargetName="ellipse" Value="#FFBF3517"/>
+        					</Trigger>
+        					<Trigger Property="IsPressed" Value="true"/>
+        					<Trigger Property="IsEnabled" Value="true"/>
+        					<Trigger Property="IsEnabled" Value="false">
+        						<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Border"/>
+        						<Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="Border"/>
+        						<Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}"/>
+        					</Trigger>
+        				</ControlTemplate.Triggers>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
+        <Style x:Key="ButtonStyle4" TargetType="{x:Type Button}" BasedOn="{x:Null}">
+        	<Setter Property="FocusVisualStyle" Value="{DynamicResource SimpleButtonFocusVisual}"/>
+        	<Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
+        	<Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
+        	<Setter Property="Template">
+        		<Setter.Value>
+        			<ControlTemplate TargetType="{x:Type Button}">
+					
+					<!-- We use Grid as a root because it is easy to add more elements to customize the button -->
+        				<Grid x:Name="Grid">
+        					<Ellipse x:Name="ellipse" Fill="{x:Null}" Margin="1.23,8,0.98,8"/>
+						
+        					<Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"/>
+						
+        					<!-- Content Presenter is where the text content etc is placed by the control -->
+        					<!-- The bindings are useful so that the control can be parameterized without editing the template -->
+        				</Grid>
+					
+					<!--Each state sets a brush on the Border in the template -->
+        				<ControlTemplate.Triggers>
+        					<Trigger Property="IsKeyboardFocused" Value="true">
+        						<Setter Property="Fill" TargetName="ellipse" Value="{x:Null}"/>
+        					</Trigger>
+        					<Trigger Property="IsMouseOver" Value="true">
+        						<Setter Property="Fill" TargetName="ellipse" Value="#FFBF3517"/>
+        						<Setter Property="Background" TargetName="Border">
+        							<Setter.Value>
+        								<ImageBrush ImageSource="Image/delete2.png" Stretch="Uniform"/>
+        							</Setter.Value>
+        						</Setter>
+        					</Trigger>
+        					<Trigger Property="IsPressed" Value="true">
+        						<Setter Property="Fill" TargetName="ellipse" Value="#FFBF3517"/>
+        					</Trigger>
+        					<Trigger Property="IsEnabled" Value="true"/>
+        					<Trigger Property="IsEnabled" Value="false">
+        						<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Border"/>
+        						<Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="Border"/>
+        						<Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}"/>
+        					</Trigger>
+        				</ControlTemplate.Triggers>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
+        <Style x:Key="ButtonStyle5" TargetType="{x:Type Button}" BasedOn="{x:Null}">
+        	<Setter Property="FocusVisualStyle" Value="{DynamicResource SimpleButtonFocusVisual}"/>
+        	<Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
+        	<Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
+        	<Setter Property="Template">
+        		<Setter.Value>
+        			<ControlTemplate TargetType="{x:Type Button}">
+					
+					<!-- We use Grid as a root because it is easy to add more elements to customize the button -->
+        				<Grid x:Name="Grid">
+						
+        					<Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"/>
+						
+        					<!-- Content Presenter is where the text content etc is placed by the control -->
+        					<!-- The bindings are useful so that the control can be parameterized without editing the template -->
+        				</Grid>
+					
+					<!--Each state sets a brush on the Border in the template -->
+        				<ControlTemplate.Triggers>
+        					<Trigger Property="IsKeyboardFocused" Value="true"/>
+        					<Trigger Property="IsMouseOver" Value="true">
+        						<Setter Property="Background" TargetName="Border">
+        							<Setter.Value>
+        								<ImageBrush ImageSource="Image/pl_prev2.png" Stretch="Uniform"/>
+        							</Setter.Value>
+        						</Setter>
+        					</Trigger>
+        					<Trigger Property="IsPressed" Value="true"/>
+        					<Trigger Property="IsEnabled" Value="true"/>
+        					<Trigger Property="IsEnabled" Value="false">
+        						<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Border"/>
+        						<Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="Border"/>
+        						<Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}"/>
+        					</Trigger>
+        				</ControlTemplate.Triggers>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
+        <Style x:Key="ButtonStyle6" TargetType="{x:Type Button}" BasedOn="{x:Null}">
+        	<Setter Property="FocusVisualStyle" Value="{DynamicResource SimpleButtonFocusVisual}"/>
+        	<Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
+        	<Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
+        	<Setter Property="Template">
+        		<Setter.Value>
+        			<ControlTemplate TargetType="{x:Type Button}">
+					
+					<!-- We use Grid as a root because it is easy to add more elements to customize the button -->
+        				<Grid x:Name="Grid">
+						
+        					<Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"/>
+						
+        					<!-- Content Presenter is where the text content etc is placed by the control -->
+        					<!-- The bindings are useful so that the control can be parameterized without editing the template -->
+        				</Grid>
+					
+					<!--Each state sets a brush on the Border in the template -->
+        				<ControlTemplate.Triggers>
+        					<Trigger Property="IsKeyboardFocused" Value="true"/>
+        					<Trigger Property="IsMouseOver" Value="true">
+        						<Setter Property="Background" TargetName="Border">
+        							<Setter.Value>
+        								<ImageBrush ImageSource="Image/pl_next2.png" Stretch="Uniform"/>
+        							</Setter.Value>
+        						</Setter>
+        					</Trigger>
+        					<Trigger Property="IsPressed" Value="true"/>
+        					<Trigger Property="IsEnabled" Value="true"/>
+        					<Trigger Property="IsEnabled" Value="false">
+        						<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Border"/>
+        						<Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="Border"/>
+        						<Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}"/>
+        					</Trigger>
+        				</ControlTemplate.Triggers>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
+        <Style x:Key="ButtonStyle7" TargetType="{x:Type Button}" BasedOn="{x:Null}">
+        	<Setter Property="FocusVisualStyle" Value="{DynamicResource SimpleButtonFocusVisual}"/>
+        	<Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
+        	<Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
+        	<Setter Property="Template">
+        		<Setter.Value>
+        			<ControlTemplate TargetType="{x:Type Button}">
+					
+					<!-- We use Grid as a root because it is easy to add more elements to customize the button -->
+        				<Grid x:Name="Grid">
+        					<Ellipse x:Name="ellipse" Fill="{x:Null}" Margin="0.667,8"/>
+						
+        					<Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"/>
+						
+        					<!-- Content Presenter is where the text content etc is placed by the control -->
+        					<!-- The bindings are useful so that the control can be parameterized without editing the template -->
+        				</Grid>
+					
+					<!--Each state sets a brush on the Border in the template -->
+        				<ControlTemplate.Triggers>
+        					<Trigger Property="IsKeyboardFocused" Value="true">
+        						<Setter Property="Fill" TargetName="ellipse" Value="{x:Null}"/>
+        					</Trigger>
+        					<Trigger Property="IsMouseOver" Value="true">
+        						<Setter Property="Fill" TargetName="ellipse" Value="#FFBF3517"/>
+        						<Setter Property="Background" TargetName="Border">
+        							<Setter.Value>
+        								<ImageBrush ImageSource="Image/new_pl2.png" Stretch="Uniform"/>
+        							</Setter.Value>
+        						</Setter>
+        					</Trigger>
+        					<Trigger Property="IsPressed" Value="true">
+        						<Setter Property="Fill" TargetName="ellipse" Value="#FFBF3517"/>
+        					</Trigger>
+        					<Trigger Property="IsEnabled" Value="true"/>
+        					<Trigger Property="IsEnabled" Value="false">
+        						<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Border"/>
+        						<Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="Border"/>
+        						<Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}"/>
+        					</Trigger>
+        				</ControlTemplate.Triggers>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
+        <Style x:Key="ButtonStyle8" TargetType="{x:Type Button}" BasedOn="{x:Null}">
+        	<Setter Property="FocusVisualStyle" Value="{DynamicResource SimpleButtonFocusVisual}"/>
+        	<Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
+        	<Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
+        	<Setter Property="Template">
+        		<Setter.Value>
+        			<ControlTemplate TargetType="{x:Type Button}">
+					
+					<!-- We use Grid as a root because it is easy to add more elements to customize the button -->
+        				<Grid x:Name="Grid">
+        					<Ellipse x:Name="ellipse" Fill="{x:Null}" Margin="0.667,8"/>
+						
+        					<Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"/>
+						
+        					<!-- Content Presenter is where the text content etc is placed by the control -->
+        					<!-- The bindings are useful so that the control can be parameterized without editing the template -->
+        				</Grid>
+					
+					<!--Each state sets a brush on the Border in the template -->
+        				<ControlTemplate.Triggers>
+        					<Trigger Property="IsKeyboardFocused" Value="true">
+        						<Setter Property="Fill" TargetName="ellipse" Value="{x:Null}"/>
+        					</Trigger>
+        					<Trigger Property="IsMouseOver" Value="true">
+        						<Setter Property="Fill" TargetName="ellipse" Value="#FFBF3517"/>
+        						<Setter Property="Background" TargetName="Border">
+        							<Setter.Value>
+        								<ImageBrush ImageSource="Image/any2.png" Stretch="Uniform"/>
+        							</Setter.Value>
+        						</Setter>
+        					</Trigger>
+        					<Trigger Property="IsPressed" Value="true">
+        						<Setter Property="Fill" TargetName="ellipse" Value="#FFBF3517"/>
+        					</Trigger>
+        					<Trigger Property="IsEnabled" Value="true"/>
+        					<Trigger Property="IsEnabled" Value="false">
+        						<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Border"/>
+        						<Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="Border"/>
+        						<Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}"/>
+        					</Trigger>
+        				</ControlTemplate.Triggers>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
+        <Style x:Key="ButtonStyle9" TargetType="{x:Type Button}" BasedOn="{x:Null}">
+        	<Setter Property="FocusVisualStyle" Value="{DynamicResource SimpleButtonFocusVisual}"/>
+        	<Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
+        	<Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
+        	<Setter Property="Template">
+        		<Setter.Value>
+        			<ControlTemplate TargetType="{x:Type Button}">
+					
+					<!-- We use Grid as a root because it is easy to add more elements to customize the button -->
+        				<Grid x:Name="Grid">
+        					<Ellipse x:Name="ellipse" Fill="{x:Null}" Margin="0.667,8"/>
+						
+        					<Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"/>
+						
+        					<!-- Content Presenter is where the text content etc is placed by the control -->
+        					<!-- The bindings are useful so that the control can be parameterized without editing the template -->
+        				</Grid>
+					
+					<!--Each state sets a brush on the Border in the template -->
+        				<ControlTemplate.Triggers>
+        					<Trigger Property="IsKeyboardFocused" Value="true">
+        						<Setter Property="Fill" TargetName="ellipse" Value="{x:Null}"/>
+        					</Trigger>
+        					<Trigger Property="IsMouseOver" Value="true">
+        						<Setter Property="Fill" TargetName="ellipse" Value="#FFBF3517"/>
+        						<Setter Property="Background" TargetName="Border">
+        							<Setter.Value>
+        								<ImageBrush ImageSource="Image/sort2.png" Stretch="Uniform"/>
+        							</Setter.Value>
+        						</Setter>
+        					</Trigger>
+        					<Trigger Property="IsPressed" Value="true">
+        						<Setter Property="Fill" TargetName="ellipse" Value="#FFBF3517"/>
+        					</Trigger>
+        					<Trigger Property="IsEnabled" Value="true"/>
+        					<Trigger Property="IsEnabled" Value="false">
+        						<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Border"/>
+        						<Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="Border"/>
+        						<Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}"/>
+        					</Trigger>
+        				</ControlTemplate.Triggers>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <ToolBarPanel x:Name="OpacityPanel" HorizontalAlignment="Left" Height="5" Margin="0,94,0,0" VerticalAlignment="Top" Width="350"/>
         <ToolBarPanel x:Name="EditPlaylistPanel" HorizontalAlignment="Left" Height="47" Margin="0,99,0,0" Width="350" Background="Black" VerticalAlignment="Top">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="110"/>
-                    <ColumnDefinition Width="37"/>
-                    <ColumnDefinition Width="33"/>
-                    <ColumnDefinition Width="36"/>
-                    <ColumnDefinition Width="34"/>
+                    <ColumnDefinition Width="120"/>
                     <ColumnDefinition Width="32"/>
-                    <ColumnDefinition Width="41"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="9"/>
+                    <ColumnDefinition Width="11"/>
+                    <ColumnDefinition Width="5"/>
+					<ColumnDefinition Width="32"/>
+					<ColumnDefinition Width="5"/>
+					<ColumnDefinition Width="11"/>
+					<ColumnDefinition Width="8"/>
+					<ColumnDefinition Width="32"/>
+					<ColumnDefinition Width="8"/>
+					<ColumnDefinition Width="32"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="playlist" Width="105.5" Foreground="White" FontFamily="Segoe UI Light" FontSize="34" TextAlignment="Left" Margin="4.5,0,0,0"/>
-                <Button Content="Button" Grid.Column="1" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="0,10,4,3.223">
+                <Button x:Name="BAdd" Content="Button" Grid.Column="1" Style="{DynamicResource ButtonStyle3}" Foreground="{x:Null}" BorderBrush="{x:Null}">
                     <Button.Background>
-                        <ImageBrush ImageSource="Image/add1.png"/>
+                        <ImageBrush ImageSource="Image/add1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button Content="Button" Grid.Column="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="1,10,1,3.223">
+                <Button x:Name="BDelete" Content="Button" Grid.Column="3" Style="{DynamicResource ButtonStyle4}" Foreground="{x:Null}" BorderBrush="{x:Null}">
                     <Button.Background>
-                        <ImageBrush ImageSource="Image/delete1.png"/>
+                        <ImageBrush ImageSource="Image/delete1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button Content="Button" Grid.Column="3" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="0,10,16,3.223">
+                <Button x:Name="BPrevPL" Content="Button" Grid.Column="5" Style="{DynamicResource ButtonStyle5}" Foreground="{x:Null}" BorderBrush="{x:Null}" d:LayoutOverrides="HorizontalAlignment">
                     <Button.Background>
-                        <ImageBrush ImageSource="Image/pl_prev1.png"/>
+                        <ImageBrush ImageSource="Image/pl_prev1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button Content="Button" Grid.Column="4" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="0,10,3,3.223">
+                <Button x:Name="BNewPL" Content="Button" Grid.Column="7" Style="{DynamicResource ButtonStyle7}" Foreground="{x:Null}" BorderBrush="{x:Null}">
                     <Button.Background>
-                        <ImageBrush ImageSource="Image/new_pl.png"/>
+                        <ImageBrush ImageSource="Image/new_pl.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button Content="Button" Grid.Column="5" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="2,10,4,3.223">
+                <Button x:Name="BNextPL" Content="Button" Grid.Column="9" Style="{DynamicResource ButtonStyle6}" Foreground="{x:Null}" BorderBrush="{x:Null}">
                     <Button.Background>
-                        <ImageBrush ImageSource="Image/pl_next1.png"/>
+                        <ImageBrush ImageSource="Image/pl_next1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button Content="Button" Grid.Column="6" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="1,10,6,3.223">
+                <Button x:Name="BAny" Content="Button" Grid.Column="11" Style="{DynamicResource ButtonStyle8}" Foreground="{x:Null}" BorderBrush="{x:Null}" d:LayoutOverrides="HorizontalAlignment">
                     <Button.Background>
-                        <ImageBrush ImageSource="Image/any1.png"/>
+                        <ImageBrush ImageSource="Image/any1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button Content="Button" Grid.Column="7" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="0,10,-4,3.223">
+                <Button x:Name="BSort" Content="Button" Grid.Column="13" Style="{DynamicResource ButtonStyle9}" Foreground="{x:Null}" BorderBrush="{x:Null}">
                     <Button.Background>
-                        <ImageBrush ImageSource="Image/sort1.png"/>
+                        <ImageBrush ImageSource="Image/sort1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
             </Grid>
@@ -1257,41 +1564,41 @@
                     <ColumnDefinition Width="20"/>
                     <ColumnDefinition Width="32"/>
                 </Grid.ColumnDefinitions>
-                <Slider Grid.Row="6" Grid.Column="1" Margin="0,-0.5,-3,-0.5" Style="{DynamicResource SliderStyle1}" IsMoveToPointEnabled="True" Grid.ColumnSpan="12"/>
+                <Slider x:Name="SliderTrack" Grid.Row="6" Grid.Column="1" Margin="0,-0.5,-3,-0.5" Style="{DynamicResource SliderStyle1}" IsMoveToPointEnabled="True" Grid.ColumnSpan="12"/>
                 <Rectangle x:Name="PrevButton" Grid.Column="1" Fill="#FF1F1F1F" Grid.Row="7" Grid.ColumnSpan="12" Margin="0,0,-3,0"/>
-                <Slider Style="{DynamicResource SliderStyle1}" IsMoveToPointEnabled="True" Grid.Column="10" Grid.Row="5" Height="3" VerticalAlignment="Top" Width="59" HorizontalAlignment="Left" Grid.ColumnSpan="3" Value="5"/>
-                <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="2" TextWrapping="Wrap" Text="00 : 00" HorizontalAlignment="Left" Margin="1,0.247,0,0" Foreground="White" FontFamily="Segoe UI Symbol" FontSize="22.667"/>
-                <Button Content="Button" Grid.Column="2" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
+                <Slider x:Name="SliderVolum" Style="{DynamicResource SliderStyle1}" IsMoveToPointEnabled="True" Grid.Column="10" Grid.Row="5" Height="3" VerticalAlignment="Top" Width="59" HorizontalAlignment="Left" Grid.ColumnSpan="3" Value="5"/>
+                <TextBlock x:Name="TextTime" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="2" TextWrapping="Wrap" Text="00 : 00" HorizontalAlignment="Left" Margin="1,0.247,0,0" Foreground="White" FontFamily="Segoe UI Symbol" FontSize="22.667"/>
+                <Button x:Name="BPrev" Content="Button" Grid.Column="2" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/prev1.png"/>
                     </Button.Background>
                 </Button>
-                <Button Content="Button" Grid.Column="10" Grid.Row="2" Style="{DynamicResource ButtonStyleVolum}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
+                <Button x:Name="BValum" Content="Button" Grid.Column="10" Grid.Row="2" Style="{DynamicResource ButtonStyleVolum}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/volum1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button Content="Button" Grid.Column="11" Grid.Row="2" Style="{DynamicResource ButtonStyleRepeat}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
+                <Button x:Name="BRepeat" Content="Button" Grid.Column="11" Grid.Row="2" Style="{DynamicResource ButtonStyleRepeat}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/replay1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button Content="Button" Grid.Column="12" Grid.Row="2" Style="{DynamicResource ButtonStyleRandom}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,12,0" Grid.RowSpan="3">
+                <Button x:Name="BRandom" Content="Button" Grid.Column="12" Grid.Row="2" Style="{DynamicResource ButtonStyleRandom}" Foreground="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,12,0" Grid.RowSpan="3">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/random1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button Content="Button" Grid.Column="4" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
+                <Button x:Name="BPlay" Content="Button" Grid.Column="4" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/play1.png"/>
                     </Button.Background>
                 </Button>
-                <Button Content="Button" Grid.Column="6" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
+                <Button x:Name="BNext" Content="Button" Grid.Column="6" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/next1.png"/>
                     </Button.Background>
                 </Button>
-                <Button Content="Button" Grid.Column="8" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
+                <Button x:Name="BStop" Content="Button" Grid.Column="8" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/stop1.png"/>
                     </Button.Background>

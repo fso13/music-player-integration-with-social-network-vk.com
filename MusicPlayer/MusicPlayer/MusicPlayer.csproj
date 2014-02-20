@@ -159,6 +159,7 @@
     <Content Include="Image\play1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Image\pl_next2.png" />
     <Resource Include="Image\pl_prev1.png" />
     <Resource Include="Image\pl_prev2.png" />
     <Resource Include="Image\pl_next1.png" />
