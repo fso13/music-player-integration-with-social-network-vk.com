@@ -4,6 +4,125 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" mc:Ignorable="d" x:Class="MusicPlayer.MainWindow"
         Title="MainWindow" Height="484" Width="350" ResizeMode="CanResizeWithGrip" WindowStyle="None" AllowsTransparency="True" MaxWidth="350" MinWidth="350" MouseLeftButtonDown="Window_MouseLeftButtonDown_1" MinHeight="94" Background="{x:Null}" Loaded="Window_Loaded_1">
     <Window.Resources>
+    	<ControlTemplate x:Key="HorizontalScrollBarTemplate" TargetType="{x:Type ScrollBar}">
+			<Grid x:Name="Bg" SnapsToDevicePixels="True" Background="Black">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}"/>
+					<ColumnDefinition Width="1E-05*"/>
+					<ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}"/>
+				</Grid.ColumnDefinitions>
+				<RepeatButton IsEnabled="{TemplateBinding IsMouseOver}" Command="ScrollBar.PageLeftCommand" >
+					<RepeatButton.Style>
+						<Style TargetType="{x:Type RepeatButton}">
+							<Setter Property="OverridesDefaultStyle" Value="True"/>
+							<Setter Property="Focusable" Value="False"/>
+							<Setter Property="IsTabStop" Value="False"/>
+							<Setter Property="Template">
+								<Setter.Value>
+									<ControlTemplate TargetType="{x:Type RepeatButton}">
+				    					<Border Background="{x:Null}" Height="18" Width="18" >
+				    						<Path Data=" M 8 15 L 8 3 L 2 9 Z" Fill="White" />
+				    					</Border>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</RepeatButton.Style>
+				</RepeatButton>
+				<RepeatButton IsEnabled="{TemplateBinding IsMouseOver}" Command="ScrollBar.PageRightCommand" Grid.Column="2">
+					<RepeatButton.Style>
+						<Style TargetType="{x:Type RepeatButton}">
+							<Setter Property="OverridesDefaultStyle" Value="True"/>
+							<Setter Property="Focusable" Value="False"/>
+							<Setter Property="IsTabStop" Value="False"/>
+							<Setter Property="Template">
+								<Setter.Value>
+									<ControlTemplate TargetType="{x:Type RepeatButton}">
+				    					<Border Background="{x:Null}" Height="18" Width="18" >
+				    						<Path Data=" M 9 15 L 9 3 L 15 9 Z" Fill="White" />
+				    					</Border>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</RepeatButton.Style>
+				</RepeatButton>
+			</Grid>
+			<ControlTemplate.Triggers>
+				<Trigger Property="IsEnabled" Value="False">
+					<Setter Property="Background" TargetName="Bg" Value="#FFF4F4F4"/>
+				</Trigger>
+			</ControlTemplate.Triggers>
+		</ControlTemplate>
+		<ControlTemplate x:Key="ScrollViewerTemplate" TargetType="{x:Type ScrollViewer}">
+			<Grid x:Name="Grid" Background="Black">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<Rectangle x:Name="Corner" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Grid.Column="1" Grid.Row="1"/>
+				<ScrollBar x:Name="PART_HorizontalScrollBar" Cursor="Arrow" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Grid.Column="0" Grid.Row="0" Orientation="Horizontal" ViewportSize="{TemplateBinding ViewportWidth}" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" AutomationProperties.AutomationId="HorizontalScrollBar" Template="{DynamicResource HorizontalScrollBarTemplate}"/>
+				<ScrollContentPresenter x:Name="PART_ScrollContentPresenter" Margin="0" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Grid.Column="0" Grid.Row="0" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" Height="26"/>				
+			</Grid>
+		</ControlTemplate>
+		<ControlTemplate x:Key="ScrollableTabControlTemplate" TargetType="{x:Type TabControl}">
+			<Grid ClipToBounds="True" SnapsToDevicePixels="True" KeyboardNavigation.TabNavigation="Local">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition x:Name="ColumnDefinition0"/>
+					<ColumnDefinition x:Name="ColumnDefinition1" Width="0"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition x:Name="RowDefinition0" Height="Auto"/>
+					<RowDefinition x:Name="RowDefinition1" Height="*"/>
+				</Grid.RowDefinitions>
+				<ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerTemplate}">
+					<TabPanel x:Name="HeaderPanel" Margin="2,2,2,0" IsItemsHost="True" Panel.ZIndex="1" Grid.Column="0" Grid.Row="0" KeyboardNavigation.TabIndex="1"/>
+				</ScrollViewer>
+				<Border x:Name="ContentPanel" BorderBrush="{TemplateBinding BorderBrush}" Grid.Column="0" Grid.Row="1" KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2" KeyboardNavigation.TabNavigation="Local" Background="Black">
+					<ContentPresenter x:Name="PART_SelectedContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Content="{TemplateBinding SelectedContent}" ContentSource="SelectedContent" ContentStringFormat="{TemplateBinding SelectedContentStringFormat}" ContentTemplate="{TemplateBinding SelectedContentTemplate}"/>
+				</Border>
+			</Grid>
+			<ControlTemplate.Triggers>
+				<Trigger Property="TabStripPlacement" Value="Bottom">
+					<Setter Property="Grid.Row" TargetName="HeaderPanel" Value="1"/>
+					<Setter Property="Grid.Row" TargetName="ContentPanel" Value="0"/>
+					<Setter Property="Height" TargetName="RowDefinition0" Value="*"/>
+					<Setter Property="Height" TargetName="RowDefinition1" Value="Auto"/>
+					<Setter Property="Margin" TargetName="HeaderPanel" Value="2,0,2,2"/>
+				</Trigger>
+				<Trigger Property="TabStripPlacement" Value="Left">
+					<Setter Property="Grid.Row" TargetName="HeaderPanel" Value="0"/>
+					<Setter Property="Grid.Row" TargetName="ContentPanel" Value="0"/>
+					<Setter Property="Grid.Column" TargetName="HeaderPanel" Value="0"/>
+					<Setter Property="Grid.Column" TargetName="ContentPanel" Value="1"/>
+					<Setter Property="Width" TargetName="ColumnDefinition0" Value="Auto"/>
+					<Setter Property="Width" TargetName="ColumnDefinition1" Value="*"/>
+					<Setter Property="Height" TargetName="RowDefinition0" Value="*"/>
+					<Setter Property="Height" TargetName="RowDefinition1" Value="0"/>
+					<Setter Property="Margin" TargetName="HeaderPanel" Value="2,2,0,2"/>
+				</Trigger>
+				<Trigger Property="TabStripPlacement" Value="Right">
+					<Setter Property="Grid.Row" TargetName="HeaderPanel" Value="0"/>
+					<Setter Property="Grid.Row" TargetName="ContentPanel" Value="0"/>
+					<Setter Property="Grid.Column" TargetName="HeaderPanel" Value="1"/>
+					<Setter Property="Grid.Column" TargetName="ContentPanel" Value="0"/>
+					<Setter Property="Width" TargetName="ColumnDefinition0" Value="*"/>
+					<Setter Property="Width" TargetName="ColumnDefinition1" Value="Auto"/>
+					<Setter Property="Height" TargetName="RowDefinition0" Value="*"/>
+					<Setter Property="Height" TargetName="RowDefinition1" Value="0"/>
+					<Setter Property="Margin" TargetName="HeaderPanel" Value="0,2,2,2"/>
+				</Trigger>
+				<Trigger Property="IsEnabled" Value="False">
+					<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+				</Trigger>
+			</ControlTemplate.Triggers>
+		</ControlTemplate>
+		
+		
         <SolidColorBrush x:Key="TabControlNormalBorderBrush" Color="#8C8E94"/>
         <Style x:Key="TabControlStyle1">
             <Style.TargetType>
@@ -21,11 +140,11 @@
                     <ControlTemplate TargetType="{x:Type TabControl}">
                         <Grid ClipToBounds="true" SnapsToDevicePixels="true" KeyboardNavigation.TabNavigation="Local">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition x:Name="ColumnDefinition0"/>
-                                <ColumnDefinition x:Name="ColumnDefinition1" Width="0"/>
+                                <ColumnDefinition x:Name="ColumnDefinition0" Width="350"/>
+                                <ColumnDefinition x:Name="ColumnDefinition1" Width="0*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition x:Name="RowDefinition0" Height="Auto"/>
+                                <RowDefinition x:Name="RowDefinition0" Height="25.947"/>
                                 <RowDefinition x:Name="RowDefinition1" Height="*"/>
                             </Grid.RowDefinitions>
                             <TabPanel x:Name="HeaderPanel" Grid.Column="0" IsItemsHost="true" Margin="0" Grid.Row="0" KeyboardNavigation.TabIndex="1" Panel.ZIndex="1" Background="Black"/>
@@ -174,35 +293,6 @@
             </Setter>
         </Style>
         <SolidColorBrush x:Key="ListBorder" Color="#828790"/>
-        <Style x:Key="ListBoxStyle1" TargetType="{x:Type ListBox}">
-            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource ListBorder}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBox}">
-                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="1" SnapsToDevicePixels="true">
-                            <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}" Template="{DynamicResource ScrollViewerControlTemplate1}">
-                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                            </ScrollViewer>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
-                            </Trigger>
-                            <Trigger Property="IsGrouping" Value="true">
-                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
         <ControlTemplate x:Key="ScrollViewerControlTemplate1" TargetType="{x:Type ScrollViewer}">
             <Grid x:Name="Grid" Background="{TemplateBinding Background}">
                 <Grid.ColumnDefinitions>
@@ -1495,6 +1585,22 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <ControlTemplate x:Key="ScrollViewerControlTemplate2" TargetType="{x:Type ScrollViewer}">
+            <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Rectangle x:Name="Corner" Grid.Column="1" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Grid.Row="1"/>
+                <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
+                <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}"/>
+                <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}"/>
+            </Grid>
+        </ControlTemplate>
     </Window.Resources>
     <Grid>
         <ToolBarPanel x:Name="OpacityPanel" HorizontalAlignment="Left" Height="5" Margin="0,94,0,0" VerticalAlignment="Top" Width="350"/>
@@ -1528,17 +1634,17 @@
                         <ImageBrush ImageSource="Image/delete1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="BPrevPL" Content="Button" Grid.Column="5" Style="{DynamicResource ButtonStyle5}" Foreground="{x:Null}" BorderBrush="{x:Null}" d:LayoutOverrides="HorizontalAlignment">
+                <Button x:Name="BPrevPl" Content="Button" Grid.Column="5" Style="{DynamicResource ButtonStyle5}" Foreground="{x:Null}" BorderBrush="{x:Null}" d:LayoutOverrides="HorizontalAlignment">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/pl_prev1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="BNewPL" Content="Button" Grid.Column="7" Style="{DynamicResource ButtonStyle7}" Foreground="{x:Null}" BorderBrush="{x:Null}" Click="BNewPL_Click">
+                <Button x:Name="BNewPl" Content="Button" Grid.Column="7" Style="{DynamicResource ButtonStyle7}" Foreground="{x:Null}" BorderBrush="{x:Null}" Click="BNewPL_Click">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/new_pl.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="BNextPL" Content="Button" Grid.Column="9" Style="{DynamicResource ButtonStyle6}" Foreground="{x:Null}" BorderBrush="{x:Null}">
+                <Button x:Name="BNextPl" Content="Button" Grid.Column="9" Style="{DynamicResource ButtonStyle6}" Foreground="{x:Null}" BorderBrush="{x:Null}">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/pl_next1.png" Stretch="Uniform"/>
                     </Button.Background>
@@ -1556,11 +1662,9 @@
             </Grid>
         </ToolBarPanel>    
 
-        <TabControl x:Name="PlayListTabs" ItemContainerStyle="{DynamicResource TabItemStyle1}" HorizontalAlignment="Left" Margin="0,146,0,59" Width="350" Style="{DynamicResource TabControlStyle1}">
-            <TabItem Header="My music" Style="{DynamicResource TabItemStyle1}"  Foreground="White" FontSize="16" FontFamily="Segoe UI Light">
-                <Grid>
-                    <ListBox x:Name="PlayListBox" ItemContainerStyle="{DynamicResource ListBoxItemStyle1}" Background="Black" BorderBrush="Black" SelectedIndex="-1" Foreground="#FF5D6655" Style="{DynamicResource ListBoxStyle2}" MouseDoubleClick="PlayListBox_MouseDoubleClick"/>
-                </Grid>
+        <TabControl x:Name="PlayListTabs" Template="{DynamicResource ScrollableTabControlTemplate}" ItemContainerStyle="{DynamicResource TabItemStyle1}" HorizontalAlignment="Left" Margin="0,146,0,59" Width="350" Style="{DynamicResource TabControlStyle1}">
+            <TabItem Header="My music" Style="{DynamicResource TabItemStyle1}"  Foreground="White" FontSize="16" FontFamily="Segoe UI Light" Background="White">
+                <ListBox x:Name="PlayListBox" ItemContainerStyle="{DynamicResource ListBoxItemStyle1}" Background="Black" BorderBrush="Black" SelectedIndex="-1" Foreground="#FF5D6655" Style="{DynamicResource ListBoxStyle2}" MouseDoubleClick="PlayListBox_MouseDoubleClick"/>
             </TabItem>
         </TabControl>
 

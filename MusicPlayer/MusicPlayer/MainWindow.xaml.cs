@@ -1,8 +1,6 @@
 ﻿using MusicPlayer.domain;
-using MusicPlayer.windows;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,8 +22,8 @@ namespace MusicPlayer
         bool _flagPlaylistVisible = true;//флаг для определения свернутости плейлиста
         private double _sizeHeight;// переменная, хранящая ширину формы до свернутости
         private static readonly VkHelper VkApi = new VkHelper();//для работы с вконтактом
-        private List<PlayList> PlayLists = new List<PlayList>();
-        int Stream=0;//для играния
+        private readonly List<PlayList> _playLists = new List<PlayList>();
+        int _stream;//для играния
  
         public MainWindow()
         {
@@ -74,58 +72,86 @@ namespace MusicPlayer
             //    Directory.CreateDirectory("image");
             _user = VkApi.GetUser();
 
-            List<VkAudio> list = VkApi.GetAudio(_user.Uid, "", "0");
+            var list = VkApi.GetAudio(_user.Uid, "", "0");
 
             if (list != null)
             {
                 Dispatcher.Invoke(new ThreadStart(delegate
                 {
-                    PlayList pl = new PlayList("My music");
+                    var pl = new PlayList("My music");
                     foreach (var vkaudio in list)
                     {
                         pl.ListAudio.Add(new Audio(vkaudio));
                         PlayListBox.Items.Add(new Audio(vkaudio));
                     }
-                    PlayLists.Add(pl);
+                    _playLists.Add(pl);
                 }));
             }
         }
 
         private void PlayListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            Play();
+            Play((ListBox)sender);
         }
 
-        public void Play()
+        public void Play(ListBox sender)
         {
-            Bass.BASS_StreamFree(Stream);
+            Bass.BASS_StreamFree(_stream);
             Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
 
-            Stream = Bass.BASS_StreamCreateURL(((Audio)PlayListBox.SelectedItem).Path, 0,
+            _stream = Bass.BASS_StreamCreateURL(((Audio)sender.SelectedItem).Path, 0,
                 BASSFlag.BASS_DEFAULT, null, IntPtr.Zero);
-            if (!Bass.BASS_ChannelPlay(Stream, false)) return;
-            Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, ((float)SliderVolum.Value) / 100);
+            if (!Bass.BASS_ChannelPlay(_stream, false)) return;
+            Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, ((float)SliderVolum.Value) / 100);
         }
 
         private void BNewPL_Click(object sender, RoutedEventArgs e)
         {
-            TabItem Item1 = new TabItem();
-             var bc = new BrushConverter();
-                    Item1.Background = (Brush) bc.ConvertFrom("#FFFFFFFF");
-            Item1.Header = "Tab1";
+            var bc = new BrushConverter();
 
-            Item1.FontFamily = new FontFamily("Segoe UI Light");
-            Item1.FontSize = 16;
-            ListBox list = new ListBox();
-            list.Style = (Style)(Application.Current.Resources["ListBoxStyle2"]);
-            list.Background = (Brush)bc.ConvertFrom("#FF000000");
-            list.BorderBrush = (Brush)bc.ConvertFrom("#FF000000");
-            list.Foreground = (Brush)bc.ConvertFrom("#FF5D6655");
+            var item1 = new TabItem
+            {
+                Style = (Style) FindResource("TabItemStyle1"),
+                Foreground = (Brush) bc.ConvertFrom("#FFFFFFFF"),
+                Header = "Tab1",
+                FontFamily = new FontFamily("Segoe UI Light"),
+                FontSize = 16
+            };
 
-            Item1.Content = list;
-            PlayListTabs.Items.Add(Item1);
-            PlayListTabs.SelectedItem = Item1;
+            var list = new ListBox
+            {
+                Name = "PlayListBox",
+                Style = (Style) FindResource("ListBoxStyle2"),
+                Background = (Brush) bc.ConvertFrom("#FF000000"),
+                BorderBrush = (Brush) bc.ConvertFrom("#FF000000"),
+                ItemContainerStyle = (Style) FindResource("ListBoxItemStyle1"),
+                Foreground = (Brush) bc.ConvertFrom("#FF5D6655")
+            };
+
+            list.MouseDoubleClick+= PlayListBox_MouseDoubleClick;
+            item1.Content = list;
+            PlayListTabs.Items.Add(item1);
+            PlayListTabs.SelectedItem = item1;
+
+            var list2 = VkApi.GetAudio(_user.Uid, "", "0");
+
+            if (list2 != null)
+            {
+                Dispatcher.Invoke(new ThreadStart(delegate
+                {
+                    var pl = new PlayList("My music");
+                    foreach (var vkaudio in list2)
+                    {
+                        
+                        pl.ListAudio.Add(new Audio(vkaudio));
+                       ((ListBox) (item1).Content).Items.Add(new Audio(vkaudio));
+                    }
+                    _playLists.Add(pl);
+                }));
+            }
         }
+
+       
 
     }
 }
