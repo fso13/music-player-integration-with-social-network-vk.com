@@ -8,9 +8,13 @@ namespace MusicPlayer.domain
 {
     class PlayList
     {
-        private string Name { get; set; }
-        private List<Audio> ListAudio = new List<Audio>();
+        public string Name { get; set; }
+        public List<Audio> ListAudio = new List<Audio>();
 
+        public PlayList(string name)
+        {
+            Name = name;
+        }
         public List<Audio> GetListAudio()
         {
             return ListAudio;

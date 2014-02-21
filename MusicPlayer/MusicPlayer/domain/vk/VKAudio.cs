@@ -3,15 +3,15 @@ using System.Xml;
 
 namespace VKAudioPlayer.domain
 {
-    public class VkAudio : Audio
+    public class VkAudio
     {
-        private string Artist { get; set; }
-        private string Title { get; set; }
-        private string Url { get; set; }
-        private string Id { get; set; }
-        private string AlbomId { get; set; }
-        private string OwnerId { get; set; }
-        private int Duration { get; set; }
+        public string Artist { get; set; }
+        public string Title { get; set; }
+        public string Url { get; set; }
+        public string Id { get; set; }
+        public string AlbomId { get; set; }
+        public string OwnerId { get; set; }
+        public int Duration { get; set; }
 
         public VkAudio()
         {

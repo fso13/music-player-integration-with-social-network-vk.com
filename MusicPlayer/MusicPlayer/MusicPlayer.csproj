@@ -55,6 +55,12 @@
     <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Bass.Net">
+      <HintPath>..\Bass.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification">
+      <HintPath>..\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -74,6 +80,7 @@
     </ApplicationDefinition>
     <Compile Include="domain\PlayList.cs" />
     <Compile Include="domain\local\LocalAudio.cs" />
+    <Compile Include="domain\TypeMusic.cs" />
     <Compile Include="domain\vk\VKAlbom.cs" />
     <Compile Include="domain\vk\VKAudio.cs" />
     <Compile Include="domain\vk\VKGroup.cs" />
@@ -150,6 +157,9 @@
     <Resource Include="Image\delete2.png" />
     <Resource Include="Image\new_pl.png" />
     <Resource Include="Image\new_pl2.png" />
+    <Content Include="bass.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Image\next1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -22,5 +22,7 @@ namespace MusicPlayer.windows
         {
             InitializeComponent();
         }
+
+        public string AccessToken = "";//ключ, получаемый после логина
     }
 }
