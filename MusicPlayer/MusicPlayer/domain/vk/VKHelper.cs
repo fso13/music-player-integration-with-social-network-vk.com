@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Windows;
 using System.Xml;
+using VKAudioPlayer.domain;
 
-namespace VKAudioPlayer.domain
+namespace MusicPlayer.domain.vk
 {
     internal class VkHelper
     {
@@ -39,11 +39,10 @@ namespace VKAudioPlayer.domain
             return list;
         }
 
-        public List<VkAudio> GetAudio(string ownerId, string albumId, string offset)
+        public List<VkAudio> GetAudio(string ownerId, string albumId)
         {
             var qs = new NameValueCollection();
-            qs["count"] = "100";
-            qs["offset"] = offset;
+            qs["count"] = "6000";
 
             qs["owner_id"] = ownerId;
             if (albumId != "")
@@ -62,11 +61,10 @@ namespace VKAudioPlayer.domain
             return list;
         }
 
-        public List<VkAudio> GetRecommendations(string offset)
+        public List<VkAudio> GetRecommendations()
         {
             var qs = new NameValueCollection();
-            qs["count"] = "100";
-            qs["offset"] = offset;
+            qs["count"] = "6000";
             var result = ExecuteCommand("audio.getRecommendations", qs);
             if (result.DocumentElement == null) return null;
             var node = result.DocumentElement.ChildNodes;
@@ -80,11 +78,10 @@ namespace VKAudioPlayer.domain
             return list;
         }
 
-        public List<VkAudio> GetPopular(string genreId, string offset)
+        public List<VkAudio> GetPopular(string genreId )
         {
             var qs = new NameValueCollection();
-            qs["count"] = "100";
-            qs["offset"] = offset;
+            qs["count"] = "6000";
             qs["genre_id"] = genreId;
             var result = ExecuteCommand("audio.getPopular", qs);
             if (result.DocumentElement == null) return null;
@@ -99,11 +96,10 @@ namespace VKAudioPlayer.domain
             return list;
         }
 
-        public List<VkAudio> FindAudio(string find, string offset)
+        public List<VkAudio> FindAudio(string find)
         {
             var qs = new NameValueCollection();
-            qs["count"] = "100";
-            qs["offset"] = offset;
+            qs["count"] = "6000";
             qs["q"] = find;
             var result = ExecuteCommand("audio.search", qs);
             if (result.DocumentElement == null) return null;
