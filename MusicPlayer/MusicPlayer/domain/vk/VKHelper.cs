@@ -7,7 +7,7 @@ using VKAudioPlayer.domain;
 
 namespace MusicPlayer.domain.vk
 {
-    internal class VkHelper
+    public class VkHelper
     {
         public string AccessToken = "";
 

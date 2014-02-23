@@ -2,7 +2,7 @@
 
 namespace VKAudioPlayer.domain
 {
-    class VkAlbom
+    public class VkAlbom
     {
         public string OwnerId { get; set; }
         public string AlbumId { get; set; }

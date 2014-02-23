@@ -2,7 +2,7 @@
 
 namespace VKAudioPlayer.domain
 {
-    class VkGroup
+    public class VkGroup
     {
         public string Gid { get; set; }
         public string Name { get; set; }

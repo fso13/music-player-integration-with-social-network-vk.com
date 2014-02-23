@@ -514,27 +514,31 @@
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="true">
-                                <Setter Property="Fill" TargetName="rectangle" Value="#FF4B1509"/>
-                                <Setter Property="Foreground" TargetName="TimeText" Value="White"/>
-                                <Setter Property="Foreground" TargetName="TitleText" Value="White"/>
-                                <Setter Property="Foreground" TargetName="InfoText" Value="White"/>
-                            </Trigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsSelected" Value="true"/>
-                                    <Condition Property="Selector.IsSelectionActive" Value="false"/>
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Fill" TargetName="rectangle" Value="#FF4B1509"/>
-                                <Setter Property="Foreground" TargetName="TitleText" Value="White"/>
-                                <Setter Property="Foreground" TargetName="InfoText" Value="White"/>
-                                <Setter Property="Foreground" TargetName="TimeText" Value="White"/>
-                            </MultiTrigger>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                                <Setter Property="Fill" TargetName="rectangle" Value="{x:Null}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
+                    		<Trigger Property="Tag" Value="Played">
+                    			<Setter Property="Foreground" TargetName="TitleText" Value="White"/>
+                    			<Setter Property="Fill" TargetName="rectangle" Value="#FF0C0C0C"/>
+                    		</Trigger>
+                    		<Trigger Property="IsSelected" Value="true">
+                    			<Setter Property="Fill" TargetName="rectangle" Value="#FF4B1509"/>
+                    			<Setter Property="Foreground" TargetName="TimeText" Value="White"/>
+                    			<Setter Property="Foreground" TargetName="TitleText" Value="White"/>
+                    			<Setter Property="Foreground" TargetName="InfoText" Value="White"/>
+                    		</Trigger>
+                    		<MultiTrigger>
+                    			<MultiTrigger.Conditions>
+                    				<Condition Property="IsSelected" Value="true"/>
+                    				<Condition Property="Selector.IsSelectionActive" Value="false"/>
+                    			</MultiTrigger.Conditions>
+                    			<Setter Property="Fill" TargetName="rectangle" Value="#FF4B1509"/>
+                    			<Setter Property="Foreground" TargetName="TitleText" Value="White"/>
+                    			<Setter Property="Foreground" TargetName="InfoText" Value="White"/>
+                    			<Setter Property="Foreground" TargetName="TimeText" Value="White"/>
+                    		</MultiTrigger>
+                    		<Trigger Property="IsEnabled" Value="false">
+                    			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                    			<Setter Property="Fill" TargetName="rectangle" Value="{x:Null}"/>
+                    		</Trigger>
+                    	</ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -1608,7 +1612,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBox}">
                         <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="1" SnapsToDevicePixels="true">
-                            <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}" Template="{DynamicResource ScrollViewerControlTemplate1}">
+                            <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}" Template="{DynamicResource ScrollViewerControlTemplate1}" ScrollChanged="ScrollViewer_ScrollChanged_1">
                                 <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                             </ScrollViewer>
                         </Border>
@@ -1696,91 +1700,7 @@
 
         <TabControl x:Name="PlayListTabs" Template="{DynamicResource ScrollableTabControlTemplate}" ItemContainerStyle="{DynamicResource TabItemStyle1}" HorizontalAlignment="Left" Margin="0,146,0,59" Width="350" Style="{DynamicResource TabControlStyle1}">
             <TabItem Header="My music" Style="{DynamicResource TabItemStyle1}"  Foreground="White" FontSize="16" FontFamily="Segoe UI Light" Background="White">
-                <ListBox x:Name="PlayListBox" ItemContainerStyle="{DynamicResource ListBoxItemStyle1}" Background="Black" BorderBrush="Black" Foreground="#FF5D6655" Style="{DynamicResource ListBoxStyle2}" MouseDoubleClick="PlayListBox_MouseDoubleClick">
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                    <ListBoxItem Content="ListBoxItem"/>
-                </ListBox>
+                <ListBox x:Name="PlayListBox" ItemContainerStyle="{DynamicResource ListBoxItemStyle1}" Background="Black" BorderBrush="Black" Foreground="#FF5D6655" Style="{DynamicResource ListBoxStyle2}" MouseDoubleClick="PlayListBox_MouseDoubleClick"/>
             </TabItem>
         </TabControl>
 
@@ -1817,7 +1737,7 @@
                 <Rectangle x:Name="PrevButton" Grid.Column="1" Fill="#FF1F1F1F" Grid.Row="7" Grid.ColumnSpan="12"/>
                 <Slider x:Name="SliderVolum" Style="{DynamicResource SliderStyle1}" IsMoveToPointEnabled="True" Grid.Column="10" Grid.Row="5" Height="3" VerticalAlignment="Top" Width="59" HorizontalAlignment="Left" Grid.ColumnSpan="3" Value="5" ValueChanged="SliderVolum_ValueChanged"/>
                 <TextBlock x:Name="TextTime" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="2" TextWrapping="Wrap" Text="00 : 00" HorizontalAlignment="Left" Margin="1,0.247,0,0" Foreground="White" FontFamily="Segoe UI Symbol" FontSize="22.667"/>
-                <Button x:Name="BPrev" Content="Button" Grid.Column="2" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
+                <Button x:Name="BPrev" Content="Button" Grid.Column="2" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3" Click="BPrev_Click">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/prev1.png"/>
                     </Button.Background>
@@ -1837,31 +1757,35 @@
                         <ImageBrush ImageSource="Image/random1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="BPlay" Content="Button" Grid.Column="4" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
+                <Button x:Name="BPlay" Content="Button" Grid.Column="4" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3" Click="BPlay_Click">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/play1.png"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="BNext" Content="Button" Grid.Column="6" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
+                <Button x:Name="BNext" Content="Button" Grid.Column="6" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3" Click="BNext_Click">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/next1.png"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="BStop" Content="Button" Grid.Column="8" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3">
+                <Button x:Name="BStop" Content="Button" Grid.Column="8" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3" Click="BStop_Click">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/stop1.png"/>
                     </Button.Background>
                 </Button>
+                <TextBlock x:Name="BeginText" VerticalAlignment="Bottom"  FontWeight="Bold" Foreground="White"
+                	Text="" Height="14" FontFamily="Segoe UI Light" Grid.ColumnSpan="12" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left">
+                    
+                </TextBlock>
                 <Rectangle Fill="#FFBF3517" Grid.Row="0" Grid.RowSpan="8" Grid.Column="0" />
-                <Button Content="playlist" Name="ViziblePlayList" Grid.Row="5" Grid.Column="0"
-                        Style="{DynamicResource ButtonStyle1}" Margin="3.67,-1.997,28.163,-1.337" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" d:LayoutOverrides="VerticalMargin" Click="ViziblePlayList_Click"/>
                 <Button Content="groups" Grid.Row="4" Grid.Column="0" Style="{DynamicResource ButtonStyle1}" Margin="3.67,-5.497,46.83,1.996" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" d:LayoutOverrides="VerticalMargin"/>
                 <Button Content="friends" Grid.Row="2" Style="{DynamicResource ButtonStyle1}" Margin="3.67,2.003,34.163,5.496" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" Grid.RowSpan="2"
-                        Grid.Column="0" FontFamily="Gisha" d:LayoutOverrides="VerticalMargin"/>
+                	Grid.Column="0" FontFamily="Gisha" d:LayoutOverrides="VerticalMargin"/>
                 <Button Content="options" Grid.Row="1" Grid.Column="0" Style="{DynamicResource ButtonStyle1}" Margin="3.67,0,34.163,0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha"/>
                 <Button Content="..." Grid.Row="5" Style="{DynamicResource ButtonStyle2}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" HorizontalAlignment="Right" Width="39.5" Margin="0,2.837,0,2.163" Grid.RowSpan="2"
-                        Grid.Column="0" />
+                	Grid.Column="0" />
                 <TextBlock Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" Text="VKMP 2" HorizontalAlignment="Left" Margin="4.226,-2.672,0,4" Foreground="White" FontFamily="Roboto" FontSize="26.667"/>
+                <Button Content="playlist" x:Name="ViziblePlayList" Grid.Row="5" Grid.Column="0"
+                	Style="{DynamicResource ButtonStyle1}" Margin="3.67,-1.997,28.163,-1.337" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" d:LayoutOverrides="VerticalMargin" Click="ViziblePlayList_Click"/>
             </Grid>
         </ToolBarPanel>
 

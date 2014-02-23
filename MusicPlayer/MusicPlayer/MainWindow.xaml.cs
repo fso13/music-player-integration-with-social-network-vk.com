@@ -1,5 +1,7 @@
-﻿using System.Globalization;
-using MusicPlayer.domain;
+﻿using System.Drawing;
+using System.Windows.Forms;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -10,6 +12,9 @@ using System.Windows.Media;
 using MusicPlayer.domain.vk;
 using Un4seen.Bass;
 using VKAudioPlayer.domain;
+using Brush = System.Windows.Media.Brush;
+using FontFamily = System.Windows.Media.FontFamily;
+using ListBox = System.Windows.Controls.ListBox;
 
 
 namespace MusicPlayer
@@ -22,22 +27,21 @@ namespace MusicPlayer
     {
         public System.Timers.Timer TimerPosition = new System.Timers.Timer();
         public System.Timers.Timer Timer2 = new System.Timers.Timer();
-        
+
+        public bool FlagPlaylistVisible = true;//флаг для определения свернутости плейлиста
+        public bool FlagPlay;
+        public bool FlagPrev = true;
+
         public double Time1;
         public double Time2;
-
-        private static VkUser _user;// текущий юзер
-        bool _flagPlaylistVisible = true;//флаг для определения свернутости плейлиста
-        private int _flagPossition;
-        private double _sizeHeight;// переменная, хранящая ширину формы до свернутости
-        private static readonly VkHelper VkApi = new VkHelper();//для работы с вконтактом
-        private readonly List<PlayList> _playLists = new List<PlayList>();
-        private static List<VkAlbom> _alboms = new List<VkAlbom>();
-
+        public int CurrentPlayIndex;
+        public static VkUser User;// текущий юзер
+        public double SizeHeight;// переменная, хранящая ширину формы до свернутости
+        public static readonly VkHelper VkApi = new VkHelper();//для работы с вконтактом
+        public static List<VkAlbom> Alboms = new List<VkAlbom>();
         public ListBox CurrentListBox;
-
-        int _stream;//для играния
- 
+        public int Stream;//для играния
+        public int OldNumber;
         public MainWindow()
         {
             InitializeComponent();
@@ -50,15 +54,15 @@ namespace MusicPlayer
 
         private void ViziblePlayList_Click(object sender, RoutedEventArgs e)
         {
-            _flagPlaylistVisible = !_flagPlaylistVisible;
-            if (!_flagPlaylistVisible)
+            FlagPlaylistVisible = !FlagPlaylistVisible;
+            if (!FlagPlaylistVisible)
             {
-                _sizeHeight = Height;
+                SizeHeight = Height;
                 Height = 94;
             }
             else
             {
-                Height = _sizeHeight;
+                Height = SizeHeight;
             }
         }
 
@@ -83,8 +87,8 @@ namespace MusicPlayer
             //}
             //if (!Directory.Exists("image"))
             //    Directory.CreateDirectory("image");
-            _user = VkApi.GetUser();
-            var list = VkApi.GetAudio(_user.Uid, "");
+            User = VkApi.GetUser();
+            var list = VkApi.GetAudio(User.Uid, "");
             
             AddAudioPlayList(PlayListBox, list);
             GetAlbomsUser();
@@ -96,35 +100,62 @@ namespace MusicPlayer
 
         }
 
+        public void SetTagPlay(int i)
+        {
+            if (CurrentListBox.Items.Count <= i) return;
+            var selectedItem = CurrentListBox.Items[i];
+            var selectedListBoxItem = CurrentListBox.ItemContainerGenerator.ContainerFromItem(selectedItem) as ListBoxItem;
+            if (selectedListBoxItem != null)
+                selectedListBoxItem.Tag = "Played";
+        }
+
+        public void SetTagNull(int i)
+        {
+            if (CurrentListBox.Items.Count <= i) return;
+            var selectedItem = CurrentListBox.Items[i];
+            var selectedListBoxItem = CurrentListBox.ItemContainerGenerator.ContainerFromItem(selectedItem) as ListBoxItem;
+            if (selectedListBoxItem != null)
+                selectedListBoxItem.Tag = null;
+        }
+
         private void TimerPosition1_Tick(object sender, EventArgs e)
         {
             Dispatcher.Invoke(new ThreadStart(delegate
             {
-                Time1 = Bass.BASS_ChannelBytes2Seconds(_stream, Bass.BASS_ChannelGetPosition(_stream));
-                Time2 = Bass.BASS_ChannelBytes2Seconds(_stream, Bass.BASS_ChannelGetLength(_stream));
+                Time1 = Bass.BASS_ChannelBytes2Seconds(Stream, Bass.BASS_ChannelGetPosition(Stream));
+                Time2 = Bass.BASS_ChannelBytes2Seconds(Stream, Bass.BASS_ChannelGetLength(Stream));
 
                 var t1 = Convert.ToString((int)Time1 / 60);
                 var t2 = Convert.ToString((int)Time1 % 60);
                 if (t1.Length == 1) t1 = "0" + t1;
                 if (t2.Length == 1) t2 = "0" + t2;
                 TextTime.Text = t1 + " : " + t2;
+                OldNumber = CurrentPlayIndex;
 
-                _flagPossition = 1;
                 SliderTrack.Value = Time1;
                 MyTaskItem.ProgressValue = (Time1) / Time2;
                 if (!Time1.Equals(Time2)) return;
-                CurrentListBox.SelectedIndex += 1;
+
+                if (CurrentPlayIndex == CurrentListBox.Items.Count - 1)
+                {
+                    CurrentPlayIndex = 0;
+                }
+                else
+                {
+                    CurrentPlayIndex = CurrentPlayIndex + 1;
+                }
                 Play(CurrentListBox);
             }));
         }
+
         public void GetAlbomsUser()
         {
-            _alboms = VkApi.GetAlbom();
+            Alboms = VkApi.GetAlbom();
             Dispatcher.Invoke(new ThreadStart(delegate
             {
-                foreach (var albom in _alboms)
+                foreach (var albom in Alboms)
                 {
-                    var list = VkApi.GetAudio(_user.Uid, albom.AlbumId);
+                    var list = VkApi.GetAudio(User.Uid, albom.AlbumId);
                     NewPlaylist(albom.Title,list);
                 }
             }));
@@ -163,6 +194,8 @@ namespace MusicPlayer
 
         private void PlayListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            OldNumber = CurrentPlayIndex;
+            CurrentPlayIndex = ((ListBox)sender).SelectedIndex;
             CurrentListBox = (ListBox)sender;
             Play((ListBox)sender);
             TimerPosition.Start();
@@ -170,14 +203,48 @@ namespace MusicPlayer
 
         public void Play(ListBox sender)
         {
-            Bass.BASS_StreamFree(_stream);
+            SetTagNull(OldNumber);
+            if (!((Audio) sender.Items[CurrentPlayIndex]).IsPlayed)
+            {
+                if (FlagPrev)
+                {
+                    for (var i = CurrentPlayIndex + 1; i < sender.Items.Count; i++)
+                    {
+                        if (!((Audio)sender.Items[i]).IsPlayed) continue;
+                        CurrentPlayIndex = i;
+                        break;
+                    }
+                }
+                else
+                {
+                    for (var i = CurrentPlayIndex - 1; i >= 0; i--)
+                    {
+                        if (!((Audio)sender.Items[i]).IsPlayed) continue;
+                        CurrentPlayIndex = i;
+                        break;
+                    }
+                }
+            }
+            Bass.BASS_StreamFree(Stream);
             Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
-
-            _stream = Bass.BASS_StreamCreateURL(((Audio)sender.SelectedItem).Path, 0,
+            Stream = Bass.BASS_StreamCreateURL(((Audio)sender.Items[CurrentPlayIndex]).Path, 0,
                 BASSFlag.BASS_DEFAULT, null, IntPtr.Zero);
-            if (!Bass.BASS_ChannelPlay(_stream, false)) return;
-            Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, ((float)SliderVolum.Value) / 100);
-            SliderTrack.Maximum = Bass.BASS_ChannelBytes2Seconds(_stream, Bass.BASS_ChannelGetLength(_stream));
+            if (!Bass.BASS_ChannelPlay(Stream, false)) return;
+            SetTagPlay(CurrentPlayIndex);
+            OldNumber = CurrentPlayIndex;
+            FlagPlay = true;
+            Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, ((float) SliderVolum.Value)/100);
+            SliderTrack.Maximum = Bass.BASS_ChannelBytes2Seconds(Stream, Bass.BASS_ChannelGetLength(Stream));
+            BeginText.Text = ((Audio)sender.Items[CurrentPlayIndex]).Title;
+            var font = new Font("Segoe UI Ligh", 12);
+            var ta = new ThicknessAnimation
+            {
+                From = new Thickness(240, 0, 0, 0),
+                To = new Thickness(Convert.ToDouble(-(TextRenderer.MeasureText(BeginText.Text, font)).Width), 0, 0, 0),
+                Duration = TimeSpan.FromMilliseconds(10000),
+                RepeatBehavior = RepeatBehavior.Forever
+            };
+            BeginText.BeginAnimation(MarginProperty, ta);
         }
 
         private void BNewPL_Click(object sender, RoutedEventArgs e)
@@ -219,72 +286,32 @@ namespace MusicPlayer
 
         }
 
-        private void RightClickButton_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void LeftClickButton_Click(object sender, RoutedEventArgs e)
-        {
-            //LeftClickButton
-        }
-
         private void SliderTrack_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (!(Math.Abs(e.NewValue-e.OldValue)<=1.1))
             {
-                //TimerPosition.Stop();
-                Bass.BASS_ChannelSetPosition(_stream, SliderTrack.Value);
-                //TimerPosition.Start();
+                Bass.BASS_ChannelSetPosition(Stream, SliderTrack.Value);
             }
-            
         }
-
 
         private void thumbNext_Click(object sender, EventArgs e)
         {
-            //_nextPrev = true;
-            //if (PlayList.Items.Count <= 0) return;
-            //_oldNumber = Number;
-            //Number++;
-            //if (Number == PlayList.Items.Count) Number = 0;
-            //Play();
-            //_flagDowloadImage = false;
+            ClickNext();
         }
 
         private void thumbPrevious_Click(object sender, EventArgs e)
         {
-            //_nextPrev = false;
-            //if (PlayList.Items.Count <= 0) return;
-            //_oldNumber = Number;
-            //Number--;
-            //if (Number < 0) Number = PlayList.Items.Count - 1;
-            //Play();
-            //_flagDowloadImage = false;
+            ClickPrev();
         }
 
         private void thumbPlay_Click(object sender, EventArgs e)
         {
-            //if (FlagStart == 0)
-            //{
-            //    if (PlayList.Items.Count <= 0) return;
-            //    Bass.BASS_ChannelPlay(Stream, false);
-            //    FlagStart = 1;
-            //    Timer1.Start();
-            //    BPlay.Background = new ImageBrush(GetThumbnailSimple("scin//b_play.png"));
-            //}
-            //else
-            //{
-            //    FlagStart = 0;
-            //    Bass.BASS_ChannelStop(Stream);
-            //    Timer1.Stop();
-            //    BPlay.Background = new ImageBrush(GetThumbnailSimple("scin//b_play2.png"));
-            //}
+            ClickPlay();
         }
 
         private void SliderVolum_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_VOL, ((float)SliderVolum.Value) / 100);
+            Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, ((float)SliderVolum.Value) / 100);
 
         }
 
@@ -301,5 +328,95 @@ namespace MusicPlayer
                 }));
             }    
         }
+
+        private void BPrev_Click(object sender, RoutedEventArgs e)
+        {
+            ClickPrev();
+        }
+
+        private void BNext_Click(object sender, RoutedEventArgs e)
+        {
+            ClickNext();
+        }
+
+        private void BStop_Click(object sender, RoutedEventArgs e)
+        {
+            Bass.BASS_ChannelStop(Stream);
+            SliderTrack.Value = 0;
+            TextTime.Text = "00 : 00";
+            FlagPlay = false;
+        }
+
+        private void BPlay_Click(object sender, RoutedEventArgs e)
+        {
+            ClickPlay();
+        }
+
+        public void ClickPrev()
+        {
+            FlagPrev = false;
+            OldNumber = CurrentPlayIndex;
+            if (CurrentPlayIndex == 0)
+            {
+                CurrentPlayIndex = CurrentListBox.Items.Count - 1;
+            }
+            else
+            {
+                CurrentPlayIndex = CurrentPlayIndex - 1;
+            }
+            CurrentListBox.ScrollIntoView(CurrentListBox.Items[CurrentPlayIndex]);
+            Play(CurrentListBox);
+        }
+
+        public void ClickNext()
+        {
+            FlagPrev = true;
+            OldNumber = CurrentPlayIndex;
+            if (CurrentPlayIndex == CurrentListBox.Items.Count - 1)
+            {
+                CurrentPlayIndex = 0;
+            }
+            else
+            {
+                CurrentPlayIndex = CurrentPlayIndex + 1;
+            }
+            CurrentListBox.ScrollIntoView(CurrentListBox.Items[CurrentPlayIndex]);
+            Play(CurrentListBox);
+        }
+
+        public void ClickPlay()
+        {
+            if (!FlagPlay)
+            {
+                if (CurrentListBox.Items.Count <= 0) return;
+                Bass.BASS_ChannelPlay(Stream, false);
+                FlagPlay = true;
+                TimerPosition.Start();
+                var imgBrush = new ImageBrush
+                {
+                    ImageSource = new BitmapImage(new Uri(@"Image//play1.png", UriKind.Relative))
+                };
+                BPlay.Background = imgBrush;
+            }
+            else
+            {
+                FlagPlay = false;
+
+                Bass.BASS_ChannelPause(Stream);
+                TimerPosition.Stop();
+                var imgBrush = new ImageBrush
+                {
+                    ImageSource = new BitmapImage(new Uri(@"Image//pause1.png", UriKind.Relative))
+                };
+                BPlay.Background = imgBrush;
+            }
+        }
+
+        private void ScrollViewer_ScrollChanged_1(object sender, ScrollChangedEventArgs e)
+        {
+            if(FlagPlay)
+                SetTagPlay(CurrentPlayIndex);
+        }
+        
     }
 }
