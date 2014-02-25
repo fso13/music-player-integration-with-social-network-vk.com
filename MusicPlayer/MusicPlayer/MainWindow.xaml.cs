@@ -15,6 +15,7 @@ using VKAudioPlayer.domain;
 using Brush = System.Windows.Media.Brush;
 using FontFamily = System.Windows.Media.FontFamily;
 using ListBox = System.Windows.Controls.ListBox;
+using System.IO;
 
 
 namespace MusicPlayer
@@ -69,34 +70,42 @@ namespace MusicPlayer
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
             Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
-            VkApi.AccessToken = "501e669057305704920915316838e10b8c30adff0f7f037d135b0a9a92d4b3c20d2a5ed3dfd0bc1414d20";
-            //if (File.Exists("token.txt"))
-            //{
-            //    VkApi.AccessToken = File.ReadAllText("token.txt");
-            //}
-            //else
-            //{
-            //    File.Create("token.txt");
-            //    VkApi.AccessToken = "";
-            //}
-            //if (VkApi.AccessToken == "")
-            //{
-            //    var form = new LoginForm();
-            //    form.ShowDialog();
-            //    VkApi.AccessToken = form.AccessToken;
-            //}
-            //if (!Directory.Exists("image"))
-            //    Directory.CreateDirectory("image");
-            User = VkApi.GetUser();
-            var list = VkApi.GetAudio(User.Uid, "");
-            
-            AddAudioPlayList(PlayListBox, list);
-            GetAlbomsUser();
-            PlayListTabs.SelectedIndex = 0;
-            var t = (ScrollViewer)PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
-            t.ScrollToHorizontalOffset(0);
-            TimerPosition.Elapsed += TimerPosition1_Tick;
-            TimerPosition.Interval = 1000;
+            //VkApi.AccessToken = "501e669057305704920915316838e10b8c30adff0f7f037d135b0a9a92d4b3c20d2a5ed3dfd0bc1414d20";
+            if (File.Exists("token.txt"))
+            {
+                VkApi.AccessToken = File.ReadAllText("token.txt");
+            }
+            else
+            {
+                File.Create("token.txt");
+                VkApi.AccessToken = "";
+            }
+            if (VkApi.AccessToken == "")
+            {
+                var form = new LoginVK();
+                form.ShowDialog();
+                VkApi.AccessToken = form.AccessToken;
+            }
+            if (!Directory.Exists("image"))
+                Directory.CreateDirectory("image");
+
+            if (VkApi.AccessToken != null && !VkApi.AccessToken.StartsWith("#error"))
+            {
+                User = VkApi.GetUser();
+                var list = VkApi.GetAudio(User.Uid, "");
+
+                AddAudioPlayList(PlayListBox, list);
+                GetAlbomsUser();
+                PlayListTabs.SelectedIndex = 0;
+                var t = (ScrollViewer)PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+                t.ScrollToHorizontalOffset(0);
+                TimerPosition.Elapsed += TimerPosition1_Tick;
+                TimerPosition.Interval = 1000;
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Ошибка авторизации.");
+            }
 
         }
 
@@ -401,7 +410,6 @@ namespace MusicPlayer
             else
             {
                 FlagPlay = false;
-
                 Bass.BASS_ChannelPause(Stream);
                 TimerPosition.Stop();
                 var imgBrush = new ImageBrush
@@ -416,6 +424,15 @@ namespace MusicPlayer
         {
             if(FlagPlay)
                 SetTagPlay(CurrentPlayIndex);
+        }
+
+        private void Window_Closed_1(object sender, EventArgs e)
+        {
+            if (!VkApi.AccessToken.StartsWith("#error"))
+            {
+                File.WriteAllText("token.txt", VkApi.AccessToken);
+            }
+
         }
         
     }

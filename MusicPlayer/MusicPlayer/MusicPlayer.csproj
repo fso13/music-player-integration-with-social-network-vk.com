@@ -71,10 +71,12 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -89,7 +91,7 @@
     <Compile Include="domain\vk\VKGroup.cs" />
     <Compile Include="domain\vk\VKHelper.cs" />
     <Compile Include="domain\vk\VKUser.cs" />
-    <Page Include="LoginForm.xaml">
+    <Page Include="LoginVK.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -104,8 +106,8 @@
     <Compile Include="domain\Audio.cs" />
     <Compile Include="domain\last.fm\LastFmHelper.cs" />
     <Compile Include="domain\last.fm\LastFmTrack.cs" />
-    <Compile Include="LoginForm.xaml.cs">
-      <DependentUpon>LoginForm.xaml</DependentUpon>
+    <Compile Include="LoginVK.xaml.cs">
+      <DependentUpon>LoginVK.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
