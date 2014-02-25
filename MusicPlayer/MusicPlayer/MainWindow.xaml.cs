@@ -104,7 +104,7 @@ namespace MusicPlayer
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show("Ошибка авторизации.");
+                System.Windows.Forms.MessageBox.Show(@"Ошибка авторизации.");
             }
 
         }
