@@ -434,6 +434,28 @@ namespace MusicPlayer
             }
 
         }
+
+        private void TextBox_KeyDown_1(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+
+            {
+                var list = VkApi.FindAudio(FindText.Text);
+                if (list == null) return;
+                for (int i = 0; i < PlayListTabs.Items.Count; i++)
+                {
+                    if (((TabItem)PlayListTabs.Items[i]).Header == "Найденые...")
+                    {
+                        PlayListTabs.Items.Remove(PlayListTabs.Items[i]);
+                        break;
+                    }
+
+                }
+                NewPlaylist("Найденые...", list);
+                var t = (ScrollViewer)PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+                t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex * 110);
+            }
+        }
         
     }
 }
