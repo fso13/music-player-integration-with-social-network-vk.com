@@ -28,7 +28,6 @@ namespace MusicPlayer
     {
         public System.Timers.Timer TimerPosition = new System.Timers.Timer();
         public System.Timers.Timer Timer2 = new System.Timers.Timer();
-
         public bool FlagPlaylistVisible = true;//флаг для определения свернутости плейлиста
         public bool FlagPlay;
         public bool FlagPrev = true;
@@ -395,28 +394,38 @@ namespace MusicPlayer
 
         public void ClickPlay()
         {
-            if (!FlagPlay)
+            if (CurrentListBox == null)
             {
-                if (CurrentListBox.Items.Count <= 0) return;
-                Bass.BASS_ChannelPlay(Stream, false);
-                FlagPlay = true;
-                TimerPosition.Start();
-                var imgBrush = new ImageBrush
-                {
-                    ImageSource = new BitmapImage(new Uri(@"Image//play1.png", UriKind.Relative))
-                };
-                BPlay.Background = imgBrush;
+                CurrentListBox = (ListBox) ((TabItem) PlayListTabs.Items[0]).FindName("PlayListBox");
+                CurrentPlayIndex = 0;
+                OldNumber = 0;
+                Play(CurrentListBox);
             }
             else
             {
-                FlagPlay = false;
-                Bass.BASS_ChannelPause(Stream);
-                TimerPosition.Stop();
-                var imgBrush = new ImageBrush
+                if (!FlagPlay)
                 {
-                    ImageSource = new BitmapImage(new Uri(@"Image//pause1.png", UriKind.Relative))
-                };
-                BPlay.Background = imgBrush;
+                    if (CurrentListBox.Items.Count <= 0) return;
+                    Bass.BASS_ChannelPlay(Stream, false);
+                    FlagPlay = true;
+                    TimerPosition.Start();
+                    var imgBrush = new ImageBrush
+                    {
+                        ImageSource = new BitmapImage(new Uri(@"Image//play1.png", UriKind.Relative))
+                    };
+                    BPlay.Background = imgBrush;
+                }
+                else
+                {
+                    FlagPlay = false;
+                    Bass.BASS_ChannelPause(Stream);
+                    TimerPosition.Stop();
+                    var imgBrush = new ImageBrush
+                    {
+                        ImageSource = new BitmapImage(new Uri(@"Image//pause1.png", UriKind.Relative))
+                    };
+                    BPlay.Background = imgBrush;
+                }
             }
         }
 
@@ -442,7 +451,7 @@ namespace MusicPlayer
             {
                 var list = VkApi.FindAudio(FindText.Text);
                 if (list == null) return;
-                for (int i = 0; i < PlayListTabs.Items.Count; i++)
+                for (var i = 0; i < PlayListTabs.Items.Count; i++)
                 {
                     if (((TabItem)PlayListTabs.Items[i]).Header == "Найденые...")
                     {
@@ -466,6 +475,32 @@ namespace MusicPlayer
         {
             Close();
         }
-        
+
+        private void minimyz_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            Topmost = !Topmost;
+
+            if (Topmost)
+            {
+                var imgBrush = new ImageBrush
+                {
+                    ImageSource = new BitmapImage(new Uri(@"Image//button2.png", UriKind.Relative))
+                };
+                button1.Background = imgBrush;
+            }
+            else
+            {
+                var imgBrush = new ImageBrush
+                {
+                    ImageSource = new BitmapImage(new Uri(@"Image//button1.png", UriKind.Relative))
+                };
+                button1.Background = imgBrush;
+            }
+        }
     }
 }
