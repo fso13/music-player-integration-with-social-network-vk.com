@@ -259,9 +259,18 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TabItem}">
                         <Grid SnapsToDevicePixels="true" Height="26" MinWidth="110">
-                            <Border x:Name="Bd" BorderThickness="1,1,1,0" Padding="{TemplateBinding Padding}" Background="Black" BorderBrush="Black">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="94"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="Bd" BorderThickness="1,1,1,0"  Padding="{TemplateBinding Padding}" Background="Black" BorderBrush="Black">
                                 <ContentPresenter x:Name="Content" ContentSource="Header" HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Height="Auto" Margin="0,-2,0,-1.293"/>
                             </Border>
+                            <Button Content="" Grid.Column="1" Style="{DynamicResource ButtonStyle10}" HorizontalAlignment="Center" Height="16" Margin="0" VerticalAlignment="Center" Width="16" Click="Button_Click_1" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                                <Button.Background>
+                                    <ImageBrush/>
+                                </Button.Background>
+                            </Button>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
@@ -1657,6 +1666,136 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="ButtonStyle10" TargetType="{x:Type Button}" BasedOn="{x:Null}">
+            <Setter Property="FocusVisualStyle" Value="{DynamicResource SimpleButtonFocusVisual}"/>
+            <Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+
+                        <!-- We use Grid as a root because it is easy to add more elements to customize the button -->
+                        <Grid x:Name="Grid">
+
+                            <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="Image/close1.png" Stretch="None"/>
+                                </Border.Background>
+                            </Border>
+
+                            <!-- Content Presenter is where the text content etc is placed by the control -->
+                        </Grid>
+
+                        <!--Each state sets a brush on the Border in the template -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="true"/>
+                            <Trigger Property="IsMouseOver" Value="true"/>
+                            <Trigger Property="IsPressed" Value="true"/>
+                            <Trigger Property="IsEnabled" Value="true"/>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Border"/>
+                                <Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="Border"/>
+                                <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ButtonStyle11" TargetType="{x:Type Button}" BasedOn="{x:Null}">
+            <Setter Property="FocusVisualStyle" Value="{DynamicResource SimpleButtonFocusVisual}"/>
+            <Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+
+                        <!-- We use Grid as a root because it is easy to add more elements to customize the button -->
+                        <Grid x:Name="Grid">
+
+                            <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="{TemplateBinding Content}" FontSize="13.333" FontFamily="Segoe UI Light" VerticalAlignment="Top" Height="18.175" Margin="0,-4.175,0,0">
+                                    <TextBlock.Background>
+                                        <ImageBrush ImageSource="Image/close1.png" Stretch="None"/>
+                                    </TextBlock.Background>
+                                </TextBlock>
+                            </Border>
+
+                            <!-- Content Presenter is where the text content etc is placed by the control -->
+                        </Grid>
+
+                        <!--Each state sets a brush on the Border in the template -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="Foreground" Value="#FF4B1509"/>
+                                <Setter Property="Foreground" TargetName="textBlock" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Foreground" Value="#FF4B1509"/>
+                                <Setter Property="Foreground" TargetName="textBlock" Value="#FF4B1509"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Foreground" TargetName="textBlock" Value="#FF4B1509"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="true"/>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Border"/>
+                                <Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="Border"/>
+                                <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ButtonStyle12" TargetType="{x:Type Button}" BasedOn="{x:Null}">
+            <Setter Property="FocusVisualStyle" Value="{DynamicResource SimpleButtonFocusVisual}"/>
+            <Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+
+                        <!-- We use Grid as a root because it is easy to add more elements to customize the button -->
+                        <Grid x:Name="Grid">
+
+                            <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" Margin="0,1,0,-1">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="Image/close1.png" Stretch="None"/>
+                                </Border.Background>
+                            </Border>
+
+                            <!-- Content Presenter is where the text content etc is placed by the control -->
+                        </Grid>
+
+                        <!--Each state sets a brush on the Border in the template -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                            	<Setter Property="Background" TargetName="Border">
+                            		<Setter.Value>
+                            			<ImageBrush ImageSource="Image/close2.png" Stretch="None"/>
+                            		</Setter.Value>
+                            	</Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                            	<Setter Property="Background" TargetName="Border">
+                            		<Setter.Value>
+                            			<ImageBrush ImageSource="Image/close2.png" Stretch="None"/>
+                            		</Setter.Value>
+                            	</Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true"/>
+                            <Trigger Property="IsEnabled" Value="true"/>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Border"/>
+                                <Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="Border"/>
+                                <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo x:Name="MyTaskItem" ProgressState="Normal">
@@ -1819,6 +1958,7 @@
                 <TextBlock Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" Text="VKMP 2" HorizontalAlignment="Left" Margin="4.226,-2.672,0,4" Foreground="White" FontFamily="Roboto" FontSize="26.667"/>
                 <Button Content="playlist" x:Name="ViziblePlayList" Grid.Row="5" Grid.Column="0"
                 	Style="{DynamicResource ButtonStyle1}" Margin="3.67,-1.997,28.163,-1.337" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" d:LayoutOverrides="VerticalMargin" Click="ViziblePlayList_Click"/>
+                <Button x:Name="CloseApp" Content="" Style="{DynamicResource ButtonStyle12}" Grid.Column="12" HorizontalAlignment="Left" Height="13" Margin="16,4,0,0" VerticalAlignment="Top" Width="12" Click="CloseApp_Click" RenderTransformOrigin="0.472,0.487"/>
             </Grid>
         </ToolBarPanel>
 

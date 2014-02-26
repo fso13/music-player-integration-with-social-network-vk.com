@@ -456,6 +456,16 @@ namespace MusicPlayer
                 t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex * 110);
             }
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            PlayListTabs.Items.Remove(((TabItem)((Grid)((System.Windows.Controls.Button)sender).Parent).TemplatedParent));
+        }
+
+        private void CloseApp_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
         
     }
 }
