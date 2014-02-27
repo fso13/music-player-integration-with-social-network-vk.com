@@ -39,6 +39,9 @@ namespace MusicPlayer
         public double SizeHeight;// переменная, хранящая ширину формы до свернутости
         public static readonly VkHelper VkApi = new VkHelper();//для работы с вконтактом
         public static List<VkAlbom> Alboms = new List<VkAlbom>();
+        public static List<VkGroup> Groups = new List<VkGroup>();
+        public static List<VkUser> Friends = new List<VkUser>();
+
         public ListBox CurrentListBox;
         public int Stream;//для играния
         public int OldNumber;
@@ -528,6 +531,86 @@ namespace MusicPlayer
                 SliderTrack.Value -= 5;
             }
             Bass.BASS_ChannelSetPosition(Stream, SliderTrack.Value);
+        }
+
+        private void GroupButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Groups.Count == 0)
+            {
+                Groups = VkApi.GetGroups(User.Uid);
+                GroupButton.ContextMenu = new System.Windows.Controls.ContextMenu();
+
+                foreach (var group in Groups)
+                {
+                    var m = new System.Windows.Controls.MenuItem { Header = @group.Name };
+                    var bc = new BrushConverter();
+                    m.Background = (Brush)bc.ConvertFrom("#FF2D343A");
+                    m.Foreground = (Brush)bc.ConvertFrom("#FFECFDFC");
+                    m.Click += m_Click3;
+                    GroupButton.ContextMenu.Items.Add(m);
+                }
+            }
+
+            GroupButton.ContextMenu.IsOpen = true;
+        }
+
+        private void m_Click3(object sender, RoutedEventArgs e)
+        {
+            var index = GroupButton.ContextMenu.Items.IndexOf(sender);
+            var list = VkApi.GetAudio(Groups[index].Gid, "");
+            if (list == null) return;
+            for (var i = 0; i < PlayListTabs.Items.Count; i++)
+            {
+                if (((TabItem)PlayListTabs.Items[i]).Header == Groups[index].Name)
+                {
+                    PlayListTabs.Items.Remove(PlayListTabs.Items[i]);
+                    break;
+                }
+
+            }
+            NewPlaylist(Groups[index].Name, list);
+            var t = (ScrollViewer)PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex * 110);
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            if (Friends.Count == 0)
+            {
+                Friends = VkApi.GetFriends(User.Uid);
+                FriendsButton.ContextMenu = new System.Windows.Controls.ContextMenu();
+
+                foreach (var friend in Friends)
+                {
+                    var m = new System.Windows.Controls.MenuItem { Header = friend.FirstName + " " + friend.LastName };
+                    var bc = new BrushConverter();
+                    m.Background = (Brush)bc.ConvertFrom("#FF2D343A");
+                    m.Foreground = (Brush)bc.ConvertFrom("#FFECFDFC");
+                    m.Click += m_ClickFriends;
+                    FriendsButton.ContextMenu.Items.Add(m);
+                }
+            }
+
+            FriendsButton.ContextMenu.IsOpen = true;
+        }
+
+        private void m_ClickFriends(object sender, RoutedEventArgs e)
+        {
+            var index = FriendsButton.ContextMenu.Items.IndexOf(sender);
+            var list = VkApi.GetAudio(Friends[index].Uid, "");
+            if (list == null) return;
+            for (var i = 0; i < PlayListTabs.Items.Count; i++)
+            {
+                if (((TabItem)PlayListTabs.Items[i]).Header == Friends[index].FirstName + " " + Friends[index].LastName)
+                {
+                    PlayListTabs.Items.Remove(PlayListTabs.Items[i]);
+                    break;
+                }
+
+            }
+            NewPlaylist(Friends[index].FirstName + " " + Friends[index].LastName, list);
+            var t = (ScrollViewer)PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex * 110);
         }
     }
 }

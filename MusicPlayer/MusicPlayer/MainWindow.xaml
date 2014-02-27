@@ -160,8 +160,32 @@
 				</Trigger>
 			</ControlTemplate.Triggers>
 		</ControlTemplate>
-		
-		
+        <Style x:Key="MenuItemStyle1" TargetType="{x:Type MenuItem}">
+            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=SubmenuItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}"/>
+            <Style.Triggers>
+                <Trigger Property="Role" Value="TopLevelHeader">
+                    <Setter Property="Padding" Value="7,2,8,3"/>
+                    <Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=TopLevelHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}"/>
+                </Trigger>
+                <Trigger Property="Role" Value="TopLevelItem">
+                    <Setter Property="Padding" Value="7,2,8,3"/>
+                    <Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=TopLevelItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}"/>
+                </Trigger>
+                <Trigger Property="Role" Value="SubmenuHeader">
+                    <Setter Property="Padding" Value="2,3,2,3"/>
+                    <Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=SubmenuHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}"/>
+                </Trigger>
+                <Trigger Property="Role" Value="SubmenuItem">
+                    <Setter Property="Padding" Value="2,3,2,3"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <SolidColorBrush x:Key="TabControlNormalBorderBrush" Color="#8C8E94"/>
         <Style x:Key="TabControlStyle1">
             <Style.TargetType>
@@ -2047,10 +2071,18 @@
                     
                 </TextBlock>
                 <Rectangle Fill="#FFBF3517" Grid.Row="0" Grid.RowSpan="8" Grid.Column="0" />
-                <Button Content="groups" Grid.Row="3" Grid.Column="0" Style="{DynamicResource ButtonStyle1}" Margin="4,5,47,2" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" Grid.RowSpan="2"/>
-                <Button Content="friends" Grid.Row="2" Style="{DynamicResource ButtonStyle1}" Margin="4,1,34,6" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" Grid.RowSpan="2"
-                	Grid.Column="0" FontFamily="Gisha"/>
-                <Button Content="options" Grid.Row="1" Grid.Column="0" Style="{DynamicResource ButtonStyle1}" Margin="4,1,34,9" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" Grid.RowSpan="2"/>
+                <Button x:Name="GroupButton" Content="groups" Grid.Row="3" Grid.Column="0" Style="{DynamicResource ButtonStyle1}" Margin="4,5,47,2" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" Grid.RowSpan="2" Click="GroupButton_Click">
+                    <Button.ContextMenu>
+                        <ContextMenu/>
+                    </Button.ContextMenu>
+                </Button>
+                <Button x:Name="FriendsButton" Content="friends" Grid.Row="2" Style="{DynamicResource ButtonStyle1}" Margin="4,1,34,6" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" Grid.RowSpan="2"
+                	Grid.Column="0" FontFamily="Gisha" Click="Button_Click_2"/>
+                <Button Content="options" Grid.Row="1" Grid.Column="0" Style="{DynamicResource ButtonStyle1}" Margin="4,1,34,9" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" Grid.RowSpan="2">
+                    <Button.ContextMenu>
+                        <ContextMenu/>
+                    </Button.ContextMenu>
+                </Button>
                 <Button Content="..." Grid.Row="5" Style="{DynamicResource ButtonStyle2}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" HorizontalAlignment="Right" Width="39.5" Margin="0,2.837,0,2.163" Grid.RowSpan="2"
                 	Grid.Column="0" />
                 <TextBlock Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" Text="VKMP 2" HorizontalAlignment="Left" Margin="4.226,-2.672,0,4" Foreground="White" FontFamily="Roboto" FontSize="26.667"/>
