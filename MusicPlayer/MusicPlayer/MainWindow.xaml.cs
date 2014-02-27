@@ -502,5 +502,32 @@ namespace MusicPlayer
                 button1.Background = imgBrush;
             }
         }
+
+        private void SliderVolum_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                SliderVolum.Value += 5;
+            }
+            else
+            {
+                SliderVolum.Value -= 5;
+            }
+            Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, ((float)SliderVolum.Value) / 100);
+
+        }
+
+        private void SliderTrack_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                SliderTrack.Value += 5;
+            }
+            else
+            {
+                SliderTrack.Value -= 5;
+            }
+            Bass.BASS_ChannelSetPosition(Stream, SliderTrack.Value);
+        }
     }
 }

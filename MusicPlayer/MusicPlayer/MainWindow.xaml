@@ -2003,9 +2003,9 @@
                     <ColumnDefinition Width="20"/>
                     <ColumnDefinition Width="32"/>
                 </Grid.ColumnDefinitions>
-                <Slider x:Name="SliderTrack" Grid.Row="5" Grid.Column="1" Margin="0,10.5,0,4.5" Style="{DynamicResource SliderStyle1}" Grid.ColumnSpan="12" ValueChanged="SliderTrack_ValueChanged" IsSnapToTickEnabled="True" IsSelectionRangeEnabled="True" IsManipulationEnabled="True" UseLayoutRounding="False" IsMoveToPointEnabled="True" Grid.RowSpan="3"/>
+                <Slider x:Name="SliderTrack" Grid.Row="5" Grid.Column="1" Margin="0,10.5,0,4.5" Style="{DynamicResource SliderStyle1}" Grid.ColumnSpan="12" ValueChanged="SliderTrack_ValueChanged" IsSnapToTickEnabled="True" IsSelectionRangeEnabled="True" IsManipulationEnabled="True" UseLayoutRounding="False" IsMoveToPointEnabled="True" Grid.RowSpan="3" MouseWheel="SliderTrack_MouseWheel"/>
                 <Rectangle x:Name="PrevButton" Grid.Column="1" Fill="#FF1F1F1F" Grid.Row="7" Grid.ColumnSpan="12"/>
-                <Slider x:Name="SliderVolum" Style="{DynamicResource SliderStyle1}" IsMoveToPointEnabled="True" Grid.Column="10" Grid.Row="5" Height="3" VerticalAlignment="Top" Width="59" HorizontalAlignment="Left" Grid.ColumnSpan="3" Value="5" ValueChanged="SliderVolum_ValueChanged"/>
+                <Slider x:Name="SliderVolum" Style="{DynamicResource SliderStyle1}" IsMoveToPointEnabled="True" Grid.Column="10" Grid.Row="5" Height="4" VerticalAlignment="Top" Width="59" HorizontalAlignment="Left" Grid.ColumnSpan="3" Value="50" ValueChanged="SliderVolum_ValueChanged" MouseWheel="SliderVolum_MouseWheel" Maximum="100"/>
                 <TextBlock x:Name="TextTime" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="2" TextWrapping="Wrap" Text="00 : 00" HorizontalAlignment="Left" Margin="1,0.247,0,0" Foreground="White" FontFamily="Segoe UI Symbol" FontSize="22.667"/>
                 <Button x:Name="BPrev" Content="Button" Grid.Column="2" Grid.Row="2" Style="{DynamicResource SimpleButton}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.RowSpan="3" Click="BPrev_Click">
                     <Button.Background>
