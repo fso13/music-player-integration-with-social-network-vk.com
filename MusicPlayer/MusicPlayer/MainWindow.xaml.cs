@@ -9,8 +9,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using MusicPlayer.domain.bass;
 using MusicPlayer.domain.vk;
 using Un4seen.Bass;
+using Un4seen.Bass.AddOn.Fx;
 using VKAudioPlayer.domain;
 using Brush = System.Windows.Media.Brush;
 using FontFamily = System.Windows.Media.FontFamily;
@@ -26,6 +28,9 @@ namespace MusicPlayer
 
     public partial class MainWindow
     {
+        private static int[] _fxEQ = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        private static double[] _EQ = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        private EQ eq;
         public System.Timers.Timer TimerPosition = new System.Timers.Timer();
         public System.Timers.Timer Timer2 = new System.Timers.Timer();
         public bool FlagPlaylistVisible = true;//флаг для определения свернутости плейлиста
@@ -43,10 +48,15 @@ namespace MusicPlayer
         public static List<VkUser> Friends = new List<VkUser>();
 
         public ListBox CurrentListBox;
-        public int Stream;//для играния
+        public static int Stream;//для играния
         public int OldNumber;
+
         public MainWindow()
         {
+            BassNet.Registration("stha64@telia.com", "2X28183316182322");
+            Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
+            SetBFX_EQ();
+
             InitializeComponent();
         }
 
@@ -71,7 +81,6 @@ namespace MusicPlayer
 
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
-            Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
             //VkApi.AccessToken = "501e669057305704920915316838e10b8c30adff0f7f037d135b0a9a92d4b3c20d2a5ed3dfd0bc1414d20";
             if (File.Exists("token.txt"))
             {
@@ -108,7 +117,7 @@ namespace MusicPlayer
             {
                 System.Windows.Forms.MessageBox.Show(@"Ошибка авторизации.");
             }
-
+            SetBFX_EQ();
         }
 
         public void SetTagPlay(int i)
@@ -260,9 +269,11 @@ namespace MusicPlayer
 
         private void BNewPL_Click(object sender, RoutedEventArgs e)
         {
-           NewPlaylist("New playlist",null);
-           var t = (ScrollViewer)PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
-           t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex * 110);
+            NewPlaylist form = new NewPlaylist();
+            form.ShowDialog();
+            NewPlaylist(form.namePlaylist, null);
+            var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
         }
 
         private void BPrevPl_Click(object sender, RoutedEventArgs e)
@@ -471,11 +482,12 @@ namespace MusicPlayer
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            PlayListTabs.Items.Remove(((TabItem)((Grid)((System.Windows.Controls.Button)sender).Parent).TemplatedParent));
+            PlayListTabs.Items.Remove(((Grid)((System.Windows.Controls.Button)sender).Parent).TemplatedParent);
         }
 
         private void CloseApp_Click(object sender, RoutedEventArgs e)
         {
+            eq.Close();
             Close();
         }
 
@@ -611,6 +623,91 @@ namespace MusicPlayer
             NewPlaylist(Friends[index].FirstName + " " + Friends[index].LastName, list);
             var t = (ScrollViewer)PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
             t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex * 110);
+        }
+
+        private void BAny_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        public static void SetBFX_EQ()
+        {
+            BASS_DX8_PARAMEQ eq = new BASS_DX8_PARAMEQ();
+            _fxEQ[0] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[1] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[2] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[3] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[4] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[5] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[6] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[7] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[8] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[9] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[10] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[11] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[12] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[13] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[14] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[15] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[16] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            _fxEQ[17] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            eq.fBandwidth = 18f;
+            eq.fGain = 0f;
+            eq.fCenter = 31f;
+            Bass.BASS_FXSetParameters(_fxEQ[0], eq);
+            eq.fCenter = 63f;
+            Bass.BASS_FXSetParameters(_fxEQ[1], eq);
+            eq.fCenter = 87f;
+            Bass.BASS_FXSetParameters(_fxEQ[2], eq);
+            eq.fCenter = 125f;
+            Bass.BASS_FXSetParameters(_fxEQ[3], eq);
+            eq.fCenter = 175f;
+            Bass.BASS_FXSetParameters(_fxEQ[4], eq);
+            eq.fCenter = 250f;
+            Bass.BASS_FXSetParameters(_fxEQ[5], eq);
+            eq.fCenter = 350f;
+            Bass.BASS_FXSetParameters(_fxEQ[6], eq);
+            eq.fCenter = 500f;
+            Bass.BASS_FXSetParameters(_fxEQ[7], eq);
+            eq.fCenter = 700f;
+            Bass.BASS_FXSetParameters(_fxEQ[8], eq);
+            eq.fCenter = 1000f;
+            Bass.BASS_FXSetParameters(_fxEQ[9], eq);
+            eq.fCenter = 1400f;
+            Bass.BASS_FXSetParameters(_fxEQ[10], eq);
+            eq.fCenter = 2000f;
+            Bass.BASS_FXSetParameters(_fxEQ[11], eq);
+            eq.fCenter = 2800f;
+            Bass.BASS_FXSetParameters(_fxEQ[12], eq);
+            eq.fCenter = 4000f;
+            Bass.BASS_FXSetParameters(_fxEQ[13], eq);
+            eq.fCenter = 5600f;
+            Bass.BASS_FXSetParameters(_fxEQ[14], eq);
+            eq.fCenter = 8000f;
+            Bass.BASS_FXSetParameters(_fxEQ[15], eq);
+            eq.fCenter = 11200f;
+            Bass.BASS_FXSetParameters(_fxEQ[16], eq);
+            eq.fCenter = 16000f;
+            Bass.BASS_FXSetParameters(_fxEQ[17], eq);
+        }
+
+        public static void UpdateEQ(int band, double gain)
+        {
+            _EQ[band] = gain;
+            BASS_DX8_PARAMEQ eq = new BASS_DX8_PARAMEQ();
+            if (Bass.BASS_FXGetParameters(_fxEQ[band], eq))
+            {
+                eq.fGain = (float)gain;
+                Bass.BASS_FXSetParameters(_fxEQ[band], eq);
+            }
+        }
+
+        private void equalizerButton_Click(object sender, RoutedEventArgs e)
+        {
+            eq = new EQ(_EQ);
+            SetBFX_EQ();
+
+            eq.Show();
         }
     }
 }

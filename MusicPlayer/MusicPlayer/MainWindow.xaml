@@ -1975,7 +1975,7 @@
                         <ImageBrush ImageSource="Image/pl_next1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="BAny" Content="Button" Grid.Column="11" Style="{DynamicResource ButtonStyle8}" Foreground="{x:Null}" BorderBrush="{x:Null}" d:LayoutOverrides="HorizontalAlignment">
+                <Button x:Name="BAny" Content="Button" Grid.Column="11" Style="{DynamicResource ButtonStyle8}" Foreground="{x:Null}" BorderBrush="{x:Null}" d:LayoutOverrides="HorizontalAlignment" Click="BAny_Click">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/any1.png" Stretch="Uniform"/>
                     </Button.Background>
@@ -2078,7 +2078,7 @@
                 </Button>
                 <Button x:Name="FriendsButton" Content="friends" Grid.Row="2" Style="{DynamicResource ButtonStyle1}" Margin="4,1,34,6" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" Grid.RowSpan="2"
                 	Grid.Column="0" FontFamily="Gisha" Click="Button_Click_2"/>
-                <Button Content="options" Grid.Row="1" Grid.Column="0" Style="{DynamicResource ButtonStyle1}" Margin="4,1,34,9" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" Grid.RowSpan="2">
+                <Button x:Name="equalizerButton" Content="equalizer" Grid.Row="1" Grid.Column="0" Style="{DynamicResource ButtonStyle1}" Margin="4,1,34,9" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" Grid.RowSpan="2" Click="equalizerButton_Click">
                     <Button.ContextMenu>
                         <ContextMenu/>
                     </Button.ContextMenu>
