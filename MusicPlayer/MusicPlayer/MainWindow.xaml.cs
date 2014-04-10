@@ -117,6 +117,7 @@ namespace MusicPlayer
             {
                 System.Windows.Forms.MessageBox.Show(@"Ошибка авторизации.");
             }
+            eq = new EQ(_EQ);
             SetBFX_EQ();
         }
 
@@ -704,10 +705,14 @@ namespace MusicPlayer
 
         private void equalizerButton_Click(object sender, RoutedEventArgs e)
         {
-            eq = new EQ(_EQ);
-            SetBFX_EQ();
-
-            eq.Show();
+            if (eq!=null && !eq.Activate())
+            {
+                eq = new EQ(_EQ);
+                SetBFX_EQ();
+                eq.Left = this.Left + this.Width + 5;
+                eq.Top = this.Top;
+                eq.Show();
+            }
         }
     }
 }

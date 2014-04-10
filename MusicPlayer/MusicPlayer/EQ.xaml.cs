@@ -31,6 +31,27 @@ namespace MusicPlayer
             SliderEq_Copy16.Value = _EQ[17];
         }
 
+        public void SetEQ(double[] _EQ)
+        {
+            SliderEq.Value = _EQ[0];
+            SliderEq_Copy.Value = _EQ[1];
+            SliderEq_Copy1.Value = _EQ[2];
+            SliderEq_Copy2.Value = _EQ[3];
+            SliderEq_Copy3.Value = _EQ[4];
+            SliderEq_Copy4.Value = _EQ[5];
+            SliderEq_Copy5.Value = _EQ[6];
+            SliderEq_Copy6.Value = _EQ[7];
+            SliderEq_Copy7.Value = _EQ[8];
+            SliderEq_Copy8.Value = _EQ[9];
+            SliderEq_Copy9.Value = _EQ[10];
+            SliderEq_Copy10.Value = _EQ[11];
+            SliderEq_Copy11.Value = _EQ[12];
+            SliderEq_Copy12.Value = _EQ[13];
+            SliderEq_Copy13.Value = _EQ[14];
+            SliderEq_Copy14.Value = _EQ[15];
+            SliderEq_Copy15.Value = _EQ[16];
+            SliderEq_Copy16.Value = _EQ[17];
+        }
 
         private void SliderEq_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -141,6 +162,11 @@ namespace MusicPlayer
         private void CloseApp_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void EQForm_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            DragMove();
         }
 
       
