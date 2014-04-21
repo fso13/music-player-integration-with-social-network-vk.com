@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
@@ -9,10 +10,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using MusicPlayer.domain.bass;
 using MusicPlayer.domain.vk;
 using Un4seen.Bass;
-using Un4seen.Bass.AddOn.Fx;
 using VKAudioPlayer.domain;
 using Brush = System.Windows.Media.Brush;
 using FontFamily = System.Windows.Media.FontFamily;
@@ -28,27 +27,27 @@ namespace MusicPlayer
 
     public partial class MainWindow
     {
-        private static int[] _fxEQ = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        private static double[] _EQ = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        private EQ eq;
+        private static readonly int[] FxEq = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        private static readonly double[] Eq = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        private Eq _eq;
         public System.Timers.Timer TimerPosition = new System.Timers.Timer();
         public System.Timers.Timer Timer2 = new System.Timers.Timer();
-        public bool FlagPlaylistVisible = true;//флаг для определения свернутости плейлиста
+        public bool FlagPlaylistVisible = true; //флаг для определения свернутости плейлиста
         public bool FlagPlay;
         public bool FlagPrev = true;
 
         public double Time1;
         public double Time2;
         public int CurrentPlayIndex;
-        public static VkUser User;// текущий юзер
-        public double SizeHeight;// переменная, хранящая ширину формы до свернутости
-        public static readonly VkHelper VkApi = new VkHelper();//для работы с вконтактом
+        public static VkUser User; // текущий юзер
+        public double SizeHeight; // переменная, хранящая ширину формы до свернутости
+        public static readonly VkHelper VkApi = new VkHelper(); //для работы с вконтактом
         public static List<VkAlbom> Alboms = new List<VkAlbom>();
         public static List<VkGroup> Groups = new List<VkGroup>();
         public static List<VkUser> Friends = new List<VkUser>();
 
         public ListBox CurrentListBox;
-        public static int Stream;//для играния
+        public static int Stream; //для играния
         public int OldNumber;
 
         public MainWindow()
@@ -108,7 +107,7 @@ namespace MusicPlayer
                 AddAudioPlayList(PlayListBox, list);
                 GetAlbomsUser();
                 PlayListTabs.SelectedIndex = 0;
-                var t = (ScrollViewer)PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+                var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
                 t.ScrollToHorizontalOffset(0);
                 TimerPosition.Elapsed += TimerPosition1_Tick;
                 TimerPosition.Interval = 1000;
@@ -117,7 +116,7 @@ namespace MusicPlayer
             {
                 System.Windows.Forms.MessageBox.Show(@"Ошибка авторизации.");
             }
-            eq = new EQ(_EQ);
+            _eq = new Eq(Eq);
             SetBFX_EQ();
         }
 
@@ -125,7 +124,8 @@ namespace MusicPlayer
         {
             if (CurrentListBox.Items.Count <= i) return;
             var selectedItem = CurrentListBox.Items[i];
-            var selectedListBoxItem = CurrentListBox.ItemContainerGenerator.ContainerFromItem(selectedItem) as ListBoxItem;
+            var selectedListBoxItem =
+                CurrentListBox.ItemContainerGenerator.ContainerFromItem(selectedItem) as ListBoxItem;
             if (selectedListBoxItem != null)
                 selectedListBoxItem.Tag = "Played";
         }
@@ -134,7 +134,8 @@ namespace MusicPlayer
         {
             if (CurrentListBox.Items.Count <= i) return;
             var selectedItem = CurrentListBox.Items[i];
-            var selectedListBoxItem = CurrentListBox.ItemContainerGenerator.ContainerFromItem(selectedItem) as ListBoxItem;
+            var selectedListBoxItem =
+                CurrentListBox.ItemContainerGenerator.ContainerFromItem(selectedItem) as ListBoxItem;
             if (selectedListBoxItem != null)
                 selectedListBoxItem.Tag = null;
         }
@@ -146,15 +147,15 @@ namespace MusicPlayer
                 Time1 = Bass.BASS_ChannelBytes2Seconds(Stream, Bass.BASS_ChannelGetPosition(Stream));
                 Time2 = Bass.BASS_ChannelBytes2Seconds(Stream, Bass.BASS_ChannelGetLength(Stream));
 
-                var t1 = Convert.ToString((int)Time1 / 60);
-                var t2 = Convert.ToString((int)Time1 % 60);
+                var t1 = Convert.ToString((int) Time1/60);
+                var t2 = Convert.ToString((int) Time1%60);
                 if (t1.Length == 1) t1 = "0" + t1;
                 if (t2.Length == 1) t2 = "0" + t2;
                 TextTime.Text = t1 + " : " + t2;
                 OldNumber = CurrentPlayIndex;
 
                 SliderTrack.Value = Time1;
-                MyTaskItem.ProgressValue = (Time1) / Time2;
+                MyTaskItem.ProgressValue = (Time1)/Time2;
                 if (!Time1.Equals(Time2)) return;
 
                 if (CurrentPlayIndex == CurrentListBox.Items.Count - 1)
@@ -177,20 +178,20 @@ namespace MusicPlayer
                 foreach (var albom in Alboms)
                 {
                     var list = VkApi.GetAudio(User.Uid, albom.AlbumId);
-                    NewPlaylist(albom.Title,list);
+                    NewPlaylist(albom.Title, list);
                 }
             }));
 
         }
 
-        public void NewPlaylist(string name, List<VkAudio> list2 )
+        public void NewPlaylist(string name, List<VkAudio> list2)
         {
             var bc = new BrushConverter();
 
             var item1 = new TabItem
             {
-                Style = (Style)FindResource("TabItemStyle1"),
-                Foreground = (Brush)bc.ConvertFrom("#FFFFFFFF"),
+                Style = (Style) FindResource("TabItemStyle1"),
+                Foreground = (Brush) bc.ConvertFrom("#FFFFFFFF"),
                 Header = name,
                 FontFamily = new FontFamily("Segoe UI Light"),
                 FontSize = 16
@@ -199,39 +200,39 @@ namespace MusicPlayer
             var list = new ListBox
             {
                 Name = "PlayListBox",
-                Style = (Style)FindResource("ListBoxStyle2"),
-                Background = (Brush)bc.ConvertFrom("#FF000000"),
-                BorderBrush = (Brush)bc.ConvertFrom("#FF000000"),
-                ItemContainerStyle = (Style)FindResource("ListBoxItemStyle1"),
-                Foreground = (Brush)bc.ConvertFrom("#FF5D6655")
+                Style = (Style) FindResource("ListBoxStyle2"),
+                Background = (Brush) bc.ConvertFrom("#FF000000"),
+                BorderBrush = (Brush) bc.ConvertFrom("#FF000000"),
+                ItemContainerStyle = (Style) FindResource("ListBoxItemStyle1"),
+                Foreground = (Brush) bc.ConvertFrom("#FF5D6655")
             };
 
             list.MouseDoubleClick += PlayListBox_MouseDoubleClick;
             item1.Content = list;
             PlayListTabs.Items.Add(item1);
             PlayListTabs.SelectedItem = item1;
-            AddAudioPlayList((ListBox)(item1).Content,list2);
+            AddAudioPlayList((ListBox) (item1).Content, list2);
         }
 
         private void PlayListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             OldNumber = CurrentPlayIndex;
-            CurrentPlayIndex = ((ListBox)sender).SelectedIndex;
-            CurrentListBox = (ListBox)sender;
-            Play((ListBox)sender);
+            CurrentPlayIndex = ((ListBox) sender).SelectedIndex;
+            CurrentListBox = (ListBox) sender;
+            Play((ListBox) sender);
             TimerPosition.Start();
         }
 
         public void Play(ListBox sender)
         {
             SetTagNull(OldNumber);
-            if (!((Audio) sender.Items[CurrentPlayIndex]).IsPlayed)
+            if (!((Audio) sender.Items[CurrentPlayIndex]).IsPlayed) //todo проверять на индекс, возможно что то не так
             {
                 if (FlagPrev)
                 {
                     for (var i = CurrentPlayIndex + 1; i < sender.Items.Count; i++)
                     {
-                        if (!((Audio)sender.Items[i]).IsPlayed) continue;
+                        if (!((Audio) sender.Items[i]).IsPlayed) continue;
                         CurrentPlayIndex = i;
                         break;
                     }
@@ -240,7 +241,7 @@ namespace MusicPlayer
                 {
                     for (var i = CurrentPlayIndex - 1; i >= 0; i--)
                     {
-                        if (!((Audio)sender.Items[i]).IsPlayed) continue;
+                        if (!((Audio) sender.Items[i]).IsPlayed) continue;
                         CurrentPlayIndex = i;
                         break;
                     }
@@ -248,7 +249,7 @@ namespace MusicPlayer
             }
             Bass.BASS_StreamFree(Stream);
             Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
-            Stream = Bass.BASS_StreamCreateURL(((Audio)sender.Items[CurrentPlayIndex]).Path, 0,
+            Stream = Bass.BASS_StreamCreateURL(((Audio) sender.Items[CurrentPlayIndex]).Path, 0,
                 BASSFlag.BASS_DEFAULT, null, IntPtr.Zero);
             if (!Bass.BASS_ChannelPlay(Stream, false)) return;
             SetTagPlay(CurrentPlayIndex);
@@ -256,7 +257,7 @@ namespace MusicPlayer
             FlagPlay = true;
             Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, ((float) SliderVolum.Value)/100);
             SliderTrack.Maximum = Bass.BASS_ChannelBytes2Seconds(Stream, Bass.BASS_ChannelGetLength(Stream));
-            BeginText.Text = ((Audio)sender.Items[CurrentPlayIndex]).Title;
+            BeginText.Text = ((Audio) sender.Items[CurrentPlayIndex]).Title;
             var font = new Font("Segoe UI Ligh", 12);
             var ta = new ThicknessAnimation
             {
@@ -270,7 +271,7 @@ namespace MusicPlayer
 
         private void BNewPL_Click(object sender, RoutedEventArgs e)
         {
-            NewPlaylist form = new NewPlaylist();
+            var form = new NewPlaylist();
             form.ShowDialog();
             NewPlaylist(form.namePlaylist, null);
             var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
@@ -279,7 +280,7 @@ namespace MusicPlayer
 
         private void BPrevPl_Click(object sender, RoutedEventArgs e)
         {
-            var t = (ScrollViewer)PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+            var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
             PlayListTabs.FindName("LeftClickButton");
             if (PlayListTabs.SelectedIndex - 1 < 0)
             {
@@ -289,15 +290,15 @@ namespace MusicPlayer
             {
                 PlayListTabs.SelectedIndex = PlayListTabs.SelectedIndex - 1;
             }
-            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex * 110);
-            
+            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
+
         }
 
         private void BNextPl_Click(object sender, RoutedEventArgs e)
         {
-            var t = (ScrollViewer)PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
-            
-            if (PlayListTabs.SelectedIndex + 1 > PlayListTabs.Items.Count-1)
+            var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+
+            if (PlayListTabs.SelectedIndex + 1 > PlayListTabs.Items.Count - 1)
             {
                 PlayListTabs.SelectedIndex = 0;
             }
@@ -305,13 +306,13 @@ namespace MusicPlayer
             {
                 PlayListTabs.SelectedIndex = PlayListTabs.SelectedIndex + 1;
             }
-            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex * 110);
+            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
 
         }
 
         private void SliderTrack_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (!(Math.Abs(e.NewValue-e.OldValue)<=1.1))
+            if (!(Math.Abs(e.NewValue - e.OldValue) <= 1.1))
             {
                 Bass.BASS_ChannelSetPosition(Stream, SliderTrack.Value);
             }
@@ -334,7 +335,7 @@ namespace MusicPlayer
 
         private void SliderVolum_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, ((float)SliderVolum.Value) / 100);
+            Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, ((float) SliderVolum.Value)/100);
 
         }
 
@@ -349,7 +350,7 @@ namespace MusicPlayer
                         listbox.Items.Add(new Audio(vkaudio));
                     }
                 }));
-            }    
+            }
         }
 
         private void BPrev_Click(object sender, RoutedEventArgs e)
@@ -446,7 +447,7 @@ namespace MusicPlayer
 
         private void ScrollViewer_ScrollChanged_1(object sender, ScrollChangedEventArgs e)
         {
-            if(FlagPlay)
+            if (FlagPlay)
                 SetTagPlay(CurrentPlayIndex);
         }
 
@@ -468,7 +469,7 @@ namespace MusicPlayer
                 if (list == null) return;
                 for (var i = 0; i < PlayListTabs.Items.Count; i++)
                 {
-                    if (((TabItem)PlayListTabs.Items[i]).Header == "Найденые...")
+                    if ((string) ((TabItem) PlayListTabs.Items[i]).Header == "Найденые...")
                     {
                         PlayListTabs.Items.Remove(PlayListTabs.Items[i]);
                         break;
@@ -476,20 +477,21 @@ namespace MusicPlayer
 
                 }
                 NewPlaylist("Найденые...", list);
-                var t = (ScrollViewer)PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
-                t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex * 110);
+                var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+                t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
             }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            PlayListTabs.Items.Remove(((Grid)((System.Windows.Controls.Button)sender).Parent).TemplatedParent);
+            PlayListTabs.Items.Remove(((Grid) ((System.Windows.Controls.Button) sender).Parent).TemplatedParent);
         }
 
         private void CloseApp_Click(object sender, RoutedEventArgs e)
         {
-            eq.Close();
+            _eq.Close();
             Close();
+            Process.GetCurrentProcess().Kill();
         }
 
         private void minimyz_Click(object sender, RoutedEventArgs e)
@@ -529,7 +531,7 @@ namespace MusicPlayer
             {
                 SliderVolum.Value -= 5;
             }
-            Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, ((float)SliderVolum.Value) / 100);
+            Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, ((float) SliderVolum.Value)/100);
 
         }
 
@@ -555,10 +557,10 @@ namespace MusicPlayer
 
                 foreach (var group in Groups)
                 {
-                    var m = new System.Windows.Controls.MenuItem { Header = @group.Name };
+                    var m = new System.Windows.Controls.MenuItem {Header = @group.Name};
                     var bc = new BrushConverter();
-                    m.Background = (Brush)bc.ConvertFrom("#FF2D343A");
-                    m.Foreground = (Brush)bc.ConvertFrom("#FFECFDFC");
+                    m.Background = (Brush) bc.ConvertFrom("#FF2D343A");
+                    m.Foreground = (Brush) bc.ConvertFrom("#FFECFDFC");
                     m.Click += m_Click3;
                     GroupButton.ContextMenu.Items.Add(m);
                 }
@@ -574,7 +576,7 @@ namespace MusicPlayer
             if (list == null) return;
             for (var i = 0; i < PlayListTabs.Items.Count; i++)
             {
-                if (((TabItem)PlayListTabs.Items[i]).Header == Groups[index].Name)
+                if ((string) ((TabItem) PlayListTabs.Items[i]).Header == Groups[index].Name)
                 {
                     PlayListTabs.Items.Remove(PlayListTabs.Items[i]);
                     break;
@@ -582,8 +584,8 @@ namespace MusicPlayer
 
             }
             NewPlaylist(Groups[index].Name, list);
-            var t = (ScrollViewer)PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
-            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex * 110);
+            var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -595,10 +597,10 @@ namespace MusicPlayer
 
                 foreach (var friend in Friends)
                 {
-                    var m = new System.Windows.Controls.MenuItem { Header = friend.FirstName + " " + friend.LastName };
+                    var m = new System.Windows.Controls.MenuItem {Header = friend.FirstName + " " + friend.LastName};
                     var bc = new BrushConverter();
-                    m.Background = (Brush)bc.ConvertFrom("#FF2D343A");
-                    m.Foreground = (Brush)bc.ConvertFrom("#FFECFDFC");
+                    m.Background = (Brush) bc.ConvertFrom("#FF2D343A");
+                    m.Foreground = (Brush) bc.ConvertFrom("#FFECFDFC");
                     m.Click += m_ClickFriends;
                     FriendsButton.ContextMenu.Items.Add(m);
                 }
@@ -614,7 +616,7 @@ namespace MusicPlayer
             if (list == null) return;
             for (var i = 0; i < PlayListTabs.Items.Count; i++)
             {
-                if (((TabItem)PlayListTabs.Items[i]).Header == Friends[index].FirstName + " " + Friends[index].LastName)
+                if ((string) ((TabItem) PlayListTabs.Items[i]).Header == Friends[index].FirstName + " " + Friends[index].LastName)
                 {
                     PlayListTabs.Items.Remove(PlayListTabs.Items[i]);
                     break;
@@ -622,97 +624,143 @@ namespace MusicPlayer
 
             }
             NewPlaylist(Friends[index].FirstName + " " + Friends[index].LastName, list);
-            var t = (ScrollViewer)PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
-            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex * 110);
+            var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
         }
 
         private void BAny_Click(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         public static void SetBFX_EQ()
         {
-            BASS_DX8_PARAMEQ eq = new BASS_DX8_PARAMEQ();
-            _fxEQ[0] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[1] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[2] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[3] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[4] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[5] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[6] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[7] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[8] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[9] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[10] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[11] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[12] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[13] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[14] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[15] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[16] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
-            _fxEQ[17] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            var eq = new BASS_DX8_PARAMEQ();
+            FxEq[0] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[1] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[2] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[3] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[4] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[5] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[6] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[7] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[8] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[9] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[10] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[11] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[12] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[13] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[14] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[15] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[16] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
+            FxEq[17] = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_DX8_PARAMEQ, 0);
             eq.fBandwidth = 18f;
             eq.fGain = 0f;
             eq.fCenter = 31f;
-            Bass.BASS_FXSetParameters(_fxEQ[0], eq);
+            Bass.BASS_FXSetParameters(FxEq[0], eq);
             eq.fCenter = 63f;
-            Bass.BASS_FXSetParameters(_fxEQ[1], eq);
+            Bass.BASS_FXSetParameters(FxEq[1], eq);
             eq.fCenter = 87f;
-            Bass.BASS_FXSetParameters(_fxEQ[2], eq);
+            Bass.BASS_FXSetParameters(FxEq[2], eq);
             eq.fCenter = 125f;
-            Bass.BASS_FXSetParameters(_fxEQ[3], eq);
+            Bass.BASS_FXSetParameters(FxEq[3], eq);
             eq.fCenter = 175f;
-            Bass.BASS_FXSetParameters(_fxEQ[4], eq);
+            Bass.BASS_FXSetParameters(FxEq[4], eq);
             eq.fCenter = 250f;
-            Bass.BASS_FXSetParameters(_fxEQ[5], eq);
+            Bass.BASS_FXSetParameters(FxEq[5], eq);
             eq.fCenter = 350f;
-            Bass.BASS_FXSetParameters(_fxEQ[6], eq);
+            Bass.BASS_FXSetParameters(FxEq[6], eq);
             eq.fCenter = 500f;
-            Bass.BASS_FXSetParameters(_fxEQ[7], eq);
+            Bass.BASS_FXSetParameters(FxEq[7], eq);
             eq.fCenter = 700f;
-            Bass.BASS_FXSetParameters(_fxEQ[8], eq);
+            Bass.BASS_FXSetParameters(FxEq[8], eq);
             eq.fCenter = 1000f;
-            Bass.BASS_FXSetParameters(_fxEQ[9], eq);
+            Bass.BASS_FXSetParameters(FxEq[9], eq);
             eq.fCenter = 1400f;
-            Bass.BASS_FXSetParameters(_fxEQ[10], eq);
+            Bass.BASS_FXSetParameters(FxEq[10], eq);
             eq.fCenter = 2000f;
-            Bass.BASS_FXSetParameters(_fxEQ[11], eq);
+            Bass.BASS_FXSetParameters(FxEq[11], eq);
             eq.fCenter = 2800f;
-            Bass.BASS_FXSetParameters(_fxEQ[12], eq);
+            Bass.BASS_FXSetParameters(FxEq[12], eq);
             eq.fCenter = 4000f;
-            Bass.BASS_FXSetParameters(_fxEQ[13], eq);
+            Bass.BASS_FXSetParameters(FxEq[13], eq);
             eq.fCenter = 5600f;
-            Bass.BASS_FXSetParameters(_fxEQ[14], eq);
+            Bass.BASS_FXSetParameters(FxEq[14], eq);
             eq.fCenter = 8000f;
-            Bass.BASS_FXSetParameters(_fxEQ[15], eq);
+            Bass.BASS_FXSetParameters(FxEq[15], eq);
             eq.fCenter = 11200f;
-            Bass.BASS_FXSetParameters(_fxEQ[16], eq);
+            Bass.BASS_FXSetParameters(FxEq[16], eq);
             eq.fCenter = 16000f;
-            Bass.BASS_FXSetParameters(_fxEQ[17], eq);
+            Bass.BASS_FXSetParameters(FxEq[17], eq);
         }
 
-        public static void UpdateEQ(int band, double gain)
+        public static void UpdateEq(int band, double gain)
         {
-            _EQ[band] = gain;
-            BASS_DX8_PARAMEQ eq = new BASS_DX8_PARAMEQ();
-            if (Bass.BASS_FXGetParameters(_fxEQ[band], eq))
+            Eq[band] = gain;
+            var eq = new BASS_DX8_PARAMEQ();
+            if (Bass.BASS_FXGetParameters(FxEq[band], eq))
             {
-                eq.fGain = (float)gain;
-                Bass.BASS_FXSetParameters(_fxEQ[band], eq);
+                eq.fGain = (float) gain;
+                Bass.BASS_FXSetParameters(FxEq[band], eq);
             }
         }
 
         private void equalizerButton_Click(object sender, RoutedEventArgs e)
         {
-            if (eq!=null && !eq.Activate())
+            if (_eq != null && !_eq.Activate())
             {
-                eq = new EQ(_EQ);
+                _eq = new Eq(Eq);
                 SetBFX_EQ();
-                eq.Left = this.Left + this.Width + 5;
-                eq.Top = this.Top;
-                eq.Show();
+                _eq.Left = Left + Width;
+                _eq.Top = Top;
+                _eq.Show();
+            }
+            else if (_eq != null && _eq.Activate())
+            {
+                _eq.Close();
+            }
+        }
+
+        private void BSort_Click(object sender, RoutedEventArgs e)
+        {
+            //OpenFileDialog dialog = new OpenFileDialog();
+            //dialog.ShowDialog();
+            //string path = dialog.FileName;
+            //List<string> listMusic = new List<string>();
+            //StreamReader reader = new StreamReader(path);
+            //for (int i = 0; i < 100-45; i++)
+            //{
+            //    listMusic.Add(reader.ReadLine());
+            //}
+
+            //foreach (var itemAudio in listMusic)
+            //{
+            //    var filename = "E://Музыка//100//" + itemAudio + ".mp3";
+            //    var webClient = new WebClient();
+            //    //VkApi.FindAudio(itemAudio);
+            //    webClient.DownloadFile(new Uri(VkApi.FindAudio(itemAudio)[0].Url), filename);
+            //}
+        }
+
+        private void BAdd_Click(object sender, RoutedEventArgs e)
+        {
+            if ((string) ((TabItem) PlayListTabs.SelectedItem).Header == "Найденые...")
+            {
+                var listBox = (ListBox) PlayListTabs.SelectedContent;
+                var audio = (Audio) listBox.SelectedItem;
+                VkApi.AddAudio(audio.OwnerID, audio.ID);
+                foreach (TabItem tabItem in PlayListTabs.Items)
+                {
+                    if ((string) tabItem.Header == "My music")
+                    {
+                        var listBox2 = (ListBox) (tabItem).FindName("PlayListBox");
+                        if (listBox2 != null) listBox2.Items.Insert(0, audio);
+                    }
+                }
             }
         }
     }
 }
+
+
+

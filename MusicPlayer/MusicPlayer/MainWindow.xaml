@@ -1950,7 +1950,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="playlist" Width="105.5" Foreground="White" FontFamily="Segoe UI Light" FontSize="34" TextAlignment="Left" Margin="4.5,0,0,0"/>
-                <Button x:Name="BAdd" Content="Button" Grid.Column="1" Style="{DynamicResource ButtonStyle3}" Foreground="{x:Null}" BorderBrush="{x:Null}">
+                <Button x:Name="BAdd" Content="Button" Grid.Column="1" Style="{DynamicResource ButtonStyle3}" Foreground="{x:Null}" BorderBrush="{x:Null}" Click="BAdd_Click">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/add1.png" Stretch="Uniform"/>
                     </Button.Background>
@@ -1980,7 +1980,7 @@
                         <ImageBrush ImageSource="Image/any1.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="BSort" Content="Button" Grid.Column="13" Style="{DynamicResource ButtonStyle9}" Foreground="{x:Null}" BorderBrush="{x:Null}">
+                <Button x:Name="BSort" Content="Button" Grid.Column="13" Style="{DynamicResource ButtonStyle9}" Foreground="{x:Null}" BorderBrush="{x:Null}" Click="BSort_Click">
                     <Button.Background>
                         <ImageBrush ImageSource="Image/sort1.png" Stretch="Uniform"/>
                     </Button.Background>
@@ -1997,7 +1997,7 @@
         <ToolBarPanel x:Name="InfoPanel" HorizontalAlignment="Left" Height="23"  Width="350" Background="#FF0F0F0F" VerticalAlignment="Bottom" Margin="0,0,0,36"/>
         <ToolBarPanel x:Name="FindPanel" HorizontalAlignment="Left" Height="36"  Width="350" AllowDrop="True" Background="#FF202020" VerticalAlignment="Bottom">
             <Grid Height="36">
-                <TextBox x:Name="FindText" HorizontalAlignment="Left" Height="30" Margin="4,3,0,3" TextWrapping="Wrap" Text="Быстрый поиск" Width="299" VerticalAlignment="Center" FontFamily="Segoe UI Light" Background="{x:Null}" Foreground="Gray" SelectionBrush="White" FontWeight="Bold" FontSize="14" Style="{DynamicResource TextBoxStyle1}" BorderThickness="0,0,0,1" KeyDown="TextBox_KeyDown_1"/>
+                <TextBox x:Name="FindText" HorizontalAlignment="Left" Height="30" Margin="4,3,0,3" TextWrapping="Wrap" Text="" Width="299" VerticalAlignment="Center" FontFamily="Segoe UI Light" Background="{x:Null}" Foreground="Gray" SelectionBrush="White" FontWeight="Bold" FontSize="14" Style="{DynamicResource TextBoxStyle1}" BorderThickness="0,0,0,1" KeyDown="TextBox_KeyDown_1"/>
             </Grid>
         </ToolBarPanel>
         <ToolBarPanel x:Name="NavigationsPanel" HorizontalAlignment="Left" Height="94" VerticalAlignment="Top" Width="350" Background="Black">

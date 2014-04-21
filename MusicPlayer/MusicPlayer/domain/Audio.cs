@@ -11,6 +11,8 @@ namespace VKAudioPlayer.domain
         public string Info { get; set; }
         public bool IsPlayed { get; set; }
         public string Path { get; set; }
+        public string ID { get; set; }
+        public string OwnerID { get; set; }
         public bool IsLocal { get; set; }
 
          public Audio(VkAudio audio)
@@ -21,6 +23,8 @@ namespace VKAudioPlayer.domain
              IsPlayed = true;
              IsLocal = false;
              Path = audio.Url;
+             OwnerID = audio.OwnerId;
+             ID = audio.Id;
          }
 	}
 }

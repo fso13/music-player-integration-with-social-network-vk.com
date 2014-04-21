@@ -21,6 +21,14 @@ namespace MusicPlayer.domain.vk
             }
             var result = new XmlDocument();
             result.Load(String.Format("https://api.vkontakte.ru/method/{0}.xml?access_token={1}{2}", name, AccessToken, param));
+            if (result.DocumentElement != null)
+            {
+                var node = result.DocumentElement.ChildNodes;
+                if (node[0].Name.Equals("error_code") && node[0].InnerText.Equals("6"))
+                {
+                    result = ExecuteCommand(name, qs);
+                }
+            }
             return result;
         }
 
@@ -53,7 +61,8 @@ namespace MusicPlayer.domain.vk
             var node = result.DocumentElement.ChildNodes;
             var list = new List<VkAudio>();
             if (node.Count <= 0) return list;
-            if (node[0].Name.Equals("error_code")) return list;
+            if (node[0].Name.Equals("error_code"))
+                return list;
             for (var i = 1; i < node.Count; i++)
             {
                 list.Add(new VkAudio(node[i]));
