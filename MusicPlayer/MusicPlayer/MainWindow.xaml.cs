@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
+using System.Net.NetworkInformation;
 using System.Windows.Forms;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
@@ -27,6 +28,7 @@ namespace MusicPlayer
 
     public partial class MainWindow
     {
+        private int _sorting;
         private static readonly int[] FxEq = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         private static readonly double[] Eq = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         private Eq _eq;
@@ -55,7 +57,7 @@ namespace MusicPlayer
             BassNet.Registration("stha64@telia.com", "2X28183316182322");
             Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
             SetBFX_EQ();
-
+            _sorting = 0;
             InitializeComponent();
         }
 
@@ -80,44 +82,51 @@ namespace MusicPlayer
 
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
-            //VkApi.AccessToken = "501e669057305704920915316838e10b8c30adff0f7f037d135b0a9a92d4b3c20d2a5ed3dfd0bc1414d20";
-            if (File.Exists("token.txt"))
+            try
             {
-                VkApi.AccessToken = File.ReadAllText("token.txt");
-            }
-            else
-            {
-                File.Create("token.txt");
-                VkApi.AccessToken = "";
-            }
-            if (VkApi.AccessToken == "")
-            {
-                var form = new LoginVK();
-                form.ShowDialog();
-                VkApi.AccessToken = form.AccessToken;
-            }
-            if (!Directory.Exists("image"))
-                Directory.CreateDirectory("image");
+                //VkApi.AccessToken = "501e669057305704920915316838e10b8c30adff0f7f037d135b0a9a92d4b3c20d2a5ed3dfd0bc1414d20";
+                if (File.Exists("token.txt"))
+                {
+                    VkApi.AccessToken = File.ReadAllText("token.txt");
+                }
+                else
+                {
+                    File.Create("token.txt");
+                    VkApi.AccessToken = "";
+                }
+                if (VkApi.AccessToken == "")
+                {
+                    var form = new LoginVk();
+                    form.ShowDialog();
+                    VkApi.AccessToken = form.AccessToken;
+                }
+                if (!Directory.Exists("image"))
+                    Directory.CreateDirectory("image");
 
-            if (VkApi.AccessToken != null && !VkApi.AccessToken.StartsWith("#error"))
-            {
-                User = VkApi.GetUser();
-                var list = VkApi.GetAudio(User.Uid, "");
+                if (VkApi.AccessToken != null && !VkApi.AccessToken.StartsWith("#error"))
+                {
+                    User = VkApi.GetUser();
+                    var list = VkApi.GetAudio(User.Uid, "");
 
-                AddAudioPlayList(PlayListBox, list);
-                GetAlbomsUser();
-                PlayListTabs.SelectedIndex = 0;
-                var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
-                t.ScrollToHorizontalOffset(0);
-                TimerPosition.Elapsed += TimerPosition1_Tick;
-                TimerPosition.Interval = 1000;
+                    AddAudioPlayList(PlayListBox, list);
+                    GetAlbomsUser();
+                    PlayListTabs.SelectedIndex = 0;
+                    var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+                    t.ScrollToHorizontalOffset(0);
+                    TimerPosition.Elapsed += TimerPosition1_Tick;
+                    TimerPosition.Interval = 1000;
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show(@"Ошибка авторизации.");
+                }
+                _eq = new Eq(Eq);
+                SetBFX_EQ();
             }
-            else
+            catch (NetworkInformationException)
             {
-                System.Windows.Forms.MessageBox.Show(@"Ошибка авторизации.");
+                System.Windows.Forms.MessageBox.Show(@"Ошибка интернет соединения.");
             }
-            _eq = new Eq(Eq);
-            SetBFX_EQ();
         }
 
         public void SetTagPlay(int i)
@@ -225,57 +234,70 @@ namespace MusicPlayer
 
         public void Play(ListBox sender)
         {
-            SetTagNull(OldNumber);
-            if (!((Audio) sender.Items[CurrentPlayIndex]).IsPlayed) //todo проверять на индекс, возможно что то не так
+            try
             {
-                if (FlagPrev)
+                SetTagNull(OldNumber);
+                if (!((Audio) sender.Items[CurrentPlayIndex]).IsPlayed)
+                    //todo проверять на индекс, возможно что то не так
                 {
-                    for (var i = CurrentPlayIndex + 1; i < sender.Items.Count; i++)
+                    if (FlagPrev)
                     {
-                        if (!((Audio) sender.Items[i]).IsPlayed) continue;
-                        CurrentPlayIndex = i;
-                        break;
+                        for (var i = CurrentPlayIndex + 1; i < sender.Items.Count; i++)
+                        {
+                            if (!((Audio) sender.Items[i]).IsPlayed) continue;
+                            CurrentPlayIndex = i;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        for (var i = CurrentPlayIndex - 1; i >= 0; i--)
+                        {
+                            if (!((Audio) sender.Items[i]).IsPlayed) continue;
+                            CurrentPlayIndex = i;
+                            break;
+                        }
                     }
                 }
-                else
+                VkHelper.CheckEthernet();
+                Bass.BASS_StreamFree(Stream);
+                Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
+                Stream = Bass.BASS_StreamCreateURL(((Audio) sender.Items[CurrentPlayIndex]).Path, 0,
+                    BASSFlag.BASS_DEFAULT, null, IntPtr.Zero);
+                if (!Bass.BASS_ChannelPlay(Stream, false)) return;
+                SetTagPlay(CurrentPlayIndex);
+                OldNumber = CurrentPlayIndex;
+                FlagPlay = true;
+                Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, ((float) SliderVolum.Value)/100);
+                SliderTrack.Maximum = Bass.BASS_ChannelBytes2Seconds(Stream, Bass.BASS_ChannelGetLength(Stream));
+                BeginText.Text = ((Audio) sender.Items[CurrentPlayIndex]).Title;
+                var font = new Font("Segoe UI Ligh", 12);
+                var ta = new ThicknessAnimation
                 {
-                    for (var i = CurrentPlayIndex - 1; i >= 0; i--)
-                    {
-                        if (!((Audio) sender.Items[i]).IsPlayed) continue;
-                        CurrentPlayIndex = i;
-                        break;
-                    }
-                }
+                    From = new Thickness(240, 0, 0, 0),
+                    To =
+                        new Thickness(Convert.ToDouble(-(TextRenderer.MeasureText(BeginText.Text, font)).Width), 0, 0, 0),
+                    Duration = TimeSpan.FromMilliseconds(10000),
+                    RepeatBehavior = RepeatBehavior.Forever
+                };
+                BeginText.BeginAnimation(MarginProperty, ta);
             }
-            Bass.BASS_StreamFree(Stream);
-            Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
-            Stream = Bass.BASS_StreamCreateURL(((Audio) sender.Items[CurrentPlayIndex]).Path, 0,
-                BASSFlag.BASS_DEFAULT, null, IntPtr.Zero);
-            if (!Bass.BASS_ChannelPlay(Stream, false)) return;
-            SetTagPlay(CurrentPlayIndex);
-            OldNumber = CurrentPlayIndex;
-            FlagPlay = true;
-            Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, ((float) SliderVolum.Value)/100);
-            SliderTrack.Maximum = Bass.BASS_ChannelBytes2Seconds(Stream, Bass.BASS_ChannelGetLength(Stream));
-            BeginText.Text = ((Audio) sender.Items[CurrentPlayIndex]).Title;
-            var font = new Font("Segoe UI Ligh", 12);
-            var ta = new ThicknessAnimation
+            catch (NetworkInformationException)
             {
-                From = new Thickness(240, 0, 0, 0),
-                To = new Thickness(Convert.ToDouble(-(TextRenderer.MeasureText(BeginText.Text, font)).Width), 0, 0, 0),
-                Duration = TimeSpan.FromMilliseconds(10000),
-                RepeatBehavior = RepeatBehavior.Forever
-            };
-            BeginText.BeginAnimation(MarginProperty, ta);
+                System.Windows.Forms.MessageBox.Show(@"Ошибка интернет соединения.");
+            }
         }
 
         private void BNewPL_Click(object sender, RoutedEventArgs e)
         {
             var form = new NewPlaylist();
             form.ShowDialog();
-            NewPlaylist(form.namePlaylist, null);
-            var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
-            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
+            if (form.OkOrcancel)
+            {
+                NewPlaylist(form.NamePlaylist, null);
+                var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+                t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
+            }
         }
 
         private void BPrevPl_Click(object sender, RoutedEventArgs e)
@@ -462,29 +484,38 @@ namespace MusicPlayer
 
         private void TextBox_KeyDown_1(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-
+            try
             {
-                var list = VkApi.FindAudio(FindText.Text);
-                if (list == null) return;
-                for (var i = 0; i < PlayListTabs.Items.Count; i++)
-                {
-                    if ((string) ((TabItem) PlayListTabs.Items[i]).Header == "Найденые...")
-                    {
-                        PlayListTabs.Items.Remove(PlayListTabs.Items[i]);
-                        break;
-                    }
+                if (e.Key == Key.Enter)
 
+                {
+                    var list = VkApi.FindAudio(FindText.Text);
+                    if (list == null) return;
+                    for (var i = 0; i < PlayListTabs.Items.Count; i++)
+                    {
+                        if ((string) ((TabItem) PlayListTabs.Items[i]).Header == "Найденые...")
+                        {
+                            PlayListTabs.Items.Remove(PlayListTabs.Items[i]);
+                            break;
+                        }
+
+                    }
+                    NewPlaylist("Найденые...", list);
+                    var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+                    t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
                 }
-                NewPlaylist("Найденые...", list);
-                var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
-                t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
+            }
+            catch (NetworkInformationException)
+            {
+                System.Windows.Forms.MessageBox.Show(@"Ошибка интернет соединения.");
             }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            PlayListTabs.Items.Remove(((Grid) ((System.Windows.Controls.Button) sender).Parent).TemplatedParent);
+            var item = (TabItem) ((Grid) ((System.Windows.Controls.Button) sender).Parent).TemplatedParent;
+            if ((string) item.Header != "My music")
+                PlayListTabs.Items.Remove(item);
         }
 
         private void CloseApp_Click(object sender, RoutedEventArgs e)
@@ -509,7 +540,7 @@ namespace MusicPlayer
                 {
                     ImageSource = new BitmapImage(new Uri(@"Image//button2.png", UriKind.Relative))
                 };
-                button1.Background = imgBrush;
+                Button1.Background = imgBrush;
             }
             else
             {
@@ -517,7 +548,7 @@ namespace MusicPlayer
                 {
                     ImageSource = new BitmapImage(new Uri(@"Image//button1.png", UriKind.Relative))
                 };
-                button1.Background = imgBrush;
+                Button1.Background = imgBrush;
             }
         }
 
@@ -550,82 +581,111 @@ namespace MusicPlayer
 
         private void GroupButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Groups.Count == 0)
+            try
             {
-                Groups = VkApi.GetGroups(User.Uid);
-                GroupButton.ContextMenu = new System.Windows.Controls.ContextMenu();
-
-                foreach (var group in Groups)
+                if (Groups.Count == 0)
                 {
-                    var m = new System.Windows.Controls.MenuItem {Header = @group.Name};
-                    var bc = new BrushConverter();
-                    m.Background = (Brush) bc.ConvertFrom("#FF2D343A");
-                    m.Foreground = (Brush) bc.ConvertFrom("#FFECFDFC");
-                    m.Click += m_Click3;
-                    GroupButton.ContextMenu.Items.Add(m);
-                }
-            }
+                    Groups = VkApi.GetGroups(User.Uid);
+                    GroupButton.ContextMenu = new System.Windows.Controls.ContextMenu();
 
-            GroupButton.ContextMenu.IsOpen = true;
+                    foreach (var group in Groups)
+                    {
+                        var m = new System.Windows.Controls.MenuItem {Header = @group.Name};
+                        var bc = new BrushConverter();
+                        m.Background = (Brush) bc.ConvertFrom("#FF2D343A");
+                        m.Foreground = (Brush) bc.ConvertFrom("#FFECFDFC");
+                        m.Click += m_Click3;
+                        GroupButton.ContextMenu.Items.Add(m);
+                    }
+                }
+
+                GroupButton.ContextMenu.IsOpen = true;
+            }
+            catch (NetworkInformationException)
+            {
+                System.Windows.Forms.MessageBox.Show(@"Ошибка интернет соединения.");
+            }
         }
 
         private void m_Click3(object sender, RoutedEventArgs e)
         {
-            var index = GroupButton.ContextMenu.Items.IndexOf(sender);
-            var list = VkApi.GetAudio(Groups[index].Gid, "");
-            if (list == null) return;
-            for (var i = 0; i < PlayListTabs.Items.Count; i++)
+            try
             {
-                if ((string) ((TabItem) PlayListTabs.Items[i]).Header == Groups[index].Name)
+                var index = GroupButton.ContextMenu.Items.IndexOf(sender);
+                var list = VkApi.GetAudio(Groups[index].Gid, "");
+                if (list == null) return;
+                for (var i = 0; i < PlayListTabs.Items.Count; i++)
                 {
-                    PlayListTabs.Items.Remove(PlayListTabs.Items[i]);
-                    break;
-                }
+                    if ((string) ((TabItem) PlayListTabs.Items[i]).Header == Groups[index].Name)
+                    {
+                        PlayListTabs.Items.Remove(PlayListTabs.Items[i]);
+                        break;
+                    }
 
+                }
+                NewPlaylist(Groups[index].Name, list);
+                var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+                t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
             }
-            NewPlaylist(Groups[index].Name, list);
-            var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
-            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
+            catch (NetworkInformationException)
+            {
+                System.Windows.Forms.MessageBox.Show(@"Ошибка интернет соединения.");
+            }
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            if (Friends.Count == 0)
+            try
             {
-                Friends = VkApi.GetFriends(User.Uid);
-                FriendsButton.ContextMenu = new System.Windows.Controls.ContextMenu();
-
-                foreach (var friend in Friends)
+                if (Friends.Count == 0)
                 {
-                    var m = new System.Windows.Controls.MenuItem {Header = friend.FirstName + " " + friend.LastName};
-                    var bc = new BrushConverter();
-                    m.Background = (Brush) bc.ConvertFrom("#FF2D343A");
-                    m.Foreground = (Brush) bc.ConvertFrom("#FFECFDFC");
-                    m.Click += m_ClickFriends;
-                    FriendsButton.ContextMenu.Items.Add(m);
-                }
-            }
+                    Friends = VkApi.GetFriends(User.Uid);
+                    FriendsButton.ContextMenu = new System.Windows.Controls.ContextMenu();
 
-            FriendsButton.ContextMenu.IsOpen = true;
+                    foreach (var friend in Friends)
+                    {
+                        var m = new System.Windows.Controls.MenuItem {Header = friend.FirstName + " " + friend.LastName};
+                        var bc = new BrushConverter();
+                        m.Background = (Brush) bc.ConvertFrom("#FF2D343A");
+                        m.Foreground = (Brush) bc.ConvertFrom("#FFECFDFC");
+                        m.Click += m_ClickFriends;
+                        FriendsButton.ContextMenu.Items.Add(m);
+                    }
+                }
+
+                FriendsButton.ContextMenu.IsOpen = true;
+            }
+            catch (NetworkInformationException)
+            {
+                System.Windows.Forms.MessageBox.Show(@"Ошибка интернет соединения.");
+            }
         }
 
         private void m_ClickFriends(object sender, RoutedEventArgs e)
         {
-            var index = FriendsButton.ContextMenu.Items.IndexOf(sender);
-            var list = VkApi.GetAudio(Friends[index].Uid, "");
-            if (list == null) return;
-            for (var i = 0; i < PlayListTabs.Items.Count; i++)
+            try
             {
-                if ((string) ((TabItem) PlayListTabs.Items[i]).Header == Friends[index].FirstName + " " + Friends[index].LastName)
+                var index = FriendsButton.ContextMenu.Items.IndexOf(sender);
+                var list = VkApi.GetAudio(Friends[index].Uid, "");
+                if (list == null) return;
+                for (var i = 0; i < PlayListTabs.Items.Count; i++)
                 {
-                    PlayListTabs.Items.Remove(PlayListTabs.Items[i]);
-                    break;
-                }
+                    if ((string) ((TabItem) PlayListTabs.Items[i]).Header ==
+                        Friends[index].FirstName + " " + Friends[index].LastName)
+                    {
+                        PlayListTabs.Items.Remove(PlayListTabs.Items[i]);
+                        break;
+                    }
 
+                }
+                NewPlaylist(Friends[index].FirstName + " " + Friends[index].LastName, list);
+                var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
+                t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
             }
-            NewPlaylist(Friends[index].FirstName + " " + Friends[index].LastName, list);
-            var t = (ScrollViewer) PlayListTabs.Template.FindName("ScrollViewerTab", PlayListTabs);
-            t.ScrollToHorizontalOffset(PlayListTabs.SelectedIndex*110);
+            catch (NetworkInformationException)
+            {
+                System.Windows.Forms.MessageBox.Show(@"Ошибка интернет соединения.");
+            }
         }
 
         private void BAny_Click(object sender, RoutedEventArgs e)
@@ -723,6 +783,43 @@ namespace MusicPlayer
 
         private void BSort_Click(object sender, RoutedEventArgs e)
         {
+
+            var listBox = (ListBox) ((TabItem) PlayListTabs.SelectedItem).FindName("PlayListBox");
+            if (listBox != null)
+            {
+                if (_sorting == 0)
+                {
+                    listBox.Items.SortDescriptions.Clear();
+                    listBox.Items.SortDescriptions.Add(
+                        new System.ComponentModel.SortDescription("Title",
+                            System.ComponentModel.ListSortDirection.Ascending));
+                    _sorting++;
+                }
+                else if (_sorting == 1)
+                {
+                    listBox.Items.SortDescriptions.Clear();
+                    listBox.Items.SortDescriptions.Add(
+                        new System.ComponentModel.SortDescription("Title",
+                            System.ComponentModel.ListSortDirection.Descending));
+                    _sorting++;
+                }
+                else if (_sorting == 2)
+                {
+                    listBox.Items.SortDescriptions.Clear();
+                    listBox.Items.SortDescriptions.Add(
+                        new System.ComponentModel.SortDescription("Duration",
+                            System.ComponentModel.ListSortDirection.Ascending));
+                    _sorting++;
+                }
+                else if (_sorting == 3)
+                {
+                    listBox.Items.SortDescriptions.Clear();
+                    listBox.Items.SortDescriptions.Add(
+                        new System.ComponentModel.SortDescription("Duration",
+                            System.ComponentModel.ListSortDirection.Descending));
+                    _sorting = 0;
+                }
+            }
             //OpenFileDialog dialog = new OpenFileDialog();
             //dialog.ShowDialog();
             //string path = dialog.FileName;
@@ -744,23 +841,49 @@ namespace MusicPlayer
 
         private void BAdd_Click(object sender, RoutedEventArgs e)
         {
-            if ((string) ((TabItem) PlayListTabs.SelectedItem).Header == "Найденые...")
+            try
             {
-                var listBox = (ListBox) PlayListTabs.SelectedContent;
-                var audio = (Audio) listBox.SelectedItem;
-                VkApi.AddAudio(audio.OwnerID, audio.ID);
-                foreach (TabItem tabItem in PlayListTabs.Items)
+                if ((string) ((TabItem) PlayListTabs.SelectedItem).Header == "Найденые...")
                 {
-                    if ((string) tabItem.Header == "My music")
+                    var listBox = (ListBox) PlayListTabs.SelectedContent;
+                    var audio = (Audio) listBox.SelectedItem;
+                    VkApi.AddAudio(audio.OwnerID, audio.ID);
+                    foreach (TabItem tabItem in PlayListTabs.Items)
                     {
-                        var listBox2 = (ListBox) (tabItem).FindName("PlayListBox");
-                        if (listBox2 != null) listBox2.Items.Insert(0, audio);
+                        if ((string) tabItem.Header == "My music")
+                        {
+                            var listBox2 = (ListBox) (tabItem).FindName("PlayListBox");
+                            if (listBox2 != null) listBox2.Items.Insert(0, audio);
+                        }
                     }
                 }
+            }
+            catch (NetworkInformationException)
+            {
+                System.Windows.Forms.MessageBox.Show(@"Ошибка интернет соединения.");
+            }
+        }
+
+        private void BDelete_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var listBox = (ListBox) ((TabItem) PlayListTabs.SelectedItem).FindName("PlayListBox");
+                if (listBox != null)
+                {
+                    var audio = (Audio) listBox.SelectedItem;
+                    VkApi.DeleteAudio(audio.OwnerID, audio.ID);
+                    listBox.Items.Remove(listBox.SelectedItem);
+                }
+            }
+            catch (NetworkInformationException)
+            {
+                System.Windows.Forms.MessageBox.Show(@"Ошибка интернет соединения.");
             }
         }
     }
 }
+
 
 
 

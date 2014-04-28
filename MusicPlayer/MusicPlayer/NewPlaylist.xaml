@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="NewPlaylist" Height="86.842" Width="300">
     <Grid>
-        <TextBox x:Name="namePL" HorizontalAlignment="Left" Height="26" Margin="10,19,0,0" TextWrapping="Wrap" Text="New playlist" VerticalAlignment="Top" Width="225"/>
+        <TextBox x:Name="NamePl" HorizontalAlignment="Left" Height="26" Margin="10,19,0,0" TextWrapping="Wrap" Text="New playlist" VerticalAlignment="Top" Width="225"/>
         <Button Content="OK" HorizontalAlignment="Left" Height="26" Margin="250,19,0,0" VerticalAlignment="Top" Width="32" Click="Button_Click_1"/>
 
     </Grid>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Net.NetworkInformation;
 using System.Windows;
 using System.Xml;
 using VKAudioPlayer.domain;
@@ -11,25 +12,54 @@ namespace MusicPlayer.domain.vk
     {
         public string AccessToken = "";
 
-        private XmlDocument ExecuteCommand(string name, NameValueCollection qs)
+        public static void CheckEthernet()
         {
-            string param = String.Empty;
-
-            for (int i = 0; i < qs.Count; i++)
+            try
             {
-                param += "&" + qs.Keys[i] + "=" + qs[i];
-            }
-            var result = new XmlDocument();
-            result.Load(String.Format("https://api.vkontakte.ru/method/{0}.xml?access_token={1}{2}", name, AccessToken, param));
-            if (result.DocumentElement != null)
-            {
-                var node = result.DocumentElement.ChildNodes;
-                if (node[0].Name.Equals("error_code") && node[0].InnerText.Equals("6"))
+                var status = IPStatus.Unknown;
+                var pingReply = new Ping().Send("vk.com");
+                if (pingReply != null) status = pingReply.Status;
+                if (status != IPStatus.Success)
                 {
-                    result = ExecuteCommand(name, qs);
+                    throw new NetworkInformationException();
                 }
             }
-            return result;
+            catch (Exception)
+            {
+                throw new NetworkInformationException();
+            }
+        }
+
+        private XmlDocument ExecuteCommand(string name, NameValueCollection qs)
+        {
+            try
+            {
+                CheckEthernet();
+                {
+                    string param = String.Empty;
+
+                    for (int i = 0; i < qs.Count; i++)
+                    {
+                        param += "&" + qs.Keys[i] + "=" + qs[i];
+                    }
+                    var result = new XmlDocument();
+                    result.Load(String.Format("https://api.vkontakte.ru/method/{0}.xml?access_token={1}{2}", name,
+                        AccessToken, param));
+                    if (result.DocumentElement != null)
+                    {
+                        var node = result.DocumentElement.ChildNodes;
+                        if (node[0].Name.Equals("error_code") && node[0].InnerText.Equals("6"))
+                        {
+                            result = ExecuteCommand(name, qs);
+                        }
+                    }
+                    return result;
+                }
+            }
+            catch (NetworkInformationException)
+            {
+                throw new NetworkInformationException();
+            }
         }
 
         public List<VkAlbom> GetAlbom()
@@ -87,7 +117,7 @@ namespace MusicPlayer.domain.vk
             return list;
         }
 
-        public List<VkAudio> GetPopular(string genreId )
+        public List<VkAudio> GetPopular(string genreId)
         {
             var qs = new NameValueCollection();
             qs["count"] = "6000";
@@ -184,6 +214,14 @@ namespace MusicPlayer.domain.vk
             qs["owner_id"] = ownerId;
             qs["audio_id"] = audioId;
             ExecuteCommand("audio.add", qs);
+        }
+
+        public void DeleteAudio(string ownerId, string audioId)
+        {
+            var qs = new NameValueCollection();
+            qs["owner_id"] = ownerId;
+            qs["audio_id"] = audioId;
+            ExecuteCommand("audio.delete", qs);
         }
 
         public void SetStatus(string text)

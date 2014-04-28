@@ -1,33 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MusicPlayer
 {
     /// <summary>
     /// Логика взаимодействия для NewPlaylist.xaml
     /// </summary>
-    public partial class NewPlaylist : Window
+    public partial class NewPlaylist
     {
-        public String namePlaylist;
+        public String NamePlaylist;
+        public bool OkOrcancel;
+
         public NewPlaylist()
         {
+            OkOrcancel = false;
             InitializeComponent();
         }
 
+
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            namePlaylist = namePL.Text;
-            this.Close();
+            NamePlaylist = NamePl.Text;
+            OkOrcancel = true;
+            Close();
         }
     }
 }
