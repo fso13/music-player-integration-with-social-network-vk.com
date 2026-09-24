@@ -136,7 +136,7 @@ namespace MusicPlayer
         {
             BPlay.Background = new ImageBrush
             {
-                ImageSource = new BitmapImage(new Uri(playing ? @"Image/pause1.png" : @"Image/play1.png", UriKind.Relative))
+                ImageSource = new BitmapImage(new Uri(playing ? "pack://application:,,,/Image/pause1.png" : "pack://application:,,,/Image/play1.png"))
             };
         }
 

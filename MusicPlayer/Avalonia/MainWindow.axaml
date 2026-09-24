@@ -1,0 +1,284 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MusicPlayer.MainWindow"
+        Title="Player"
+        Width="350" Height="484"
+        MinWidth="350" MaxWidth="350"
+        MinHeight="94"
+        WindowDecorations="None"
+        Background="Black"
+        FontFamily="Segoe UI Light, Segoe UI, Inter"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False">
+  <Window.Resources>
+    <DataTemplate x:Key="TrackTemplate">
+      <Grid ColumnDefinitions="*,55" RowDefinitions="20,16" Height="36" Margin="8,0,4,0">
+        <TextBlock Classes="title" Text="{Binding Title}" Foreground="Gray" FontSize="15" TextTrimming="CharacterEllipsis"/>
+        <TextBlock Grid.Column="1" Text="{Binding Duration}" Foreground="Gray" FontSize="15" HorizontalAlignment="Right" Margin="0,0,4,0"/>
+        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Info}" Foreground="Gray" FontSize="13" TextTrimming="CharacterEllipsis"/>
+      </Grid>
+    </DataTemplate>
+  </Window.Resources>
+  <Window.Styles>
+    <Style Selector="Button.flat">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="FocusAdorner" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <ControlTemplate>
+          <ContentPresenter Content="{TemplateBinding Content}"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"/>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="Button.transport">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="FocusAdorner" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Panel>
+            <Ellipse x:Name="Glow" Fill="Transparent" Margin="2"/>
+            <ContentPresenter Content="{TemplateBinding Content}"
+                              HorizontalContentAlignment="Center"
+                              VerticalContentAlignment="Center"/>
+          </Panel>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="Button.transport:pointerover /template/ Ellipse#Glow">
+      <Setter Property="Fill" Value="#BF3517"/>
+    </Style>
+    <Style Selector="Button.transport.on /template/ Ellipse#Glow">
+      <Setter Property="Fill" Value="#BF3517"/>
+    </Style>
+    <Style Selector="Button.flat:pointerover Image.idle">
+      <Setter Property="IsVisible" Value="False"/>
+    </Style>
+    <Style Selector="Button.flat:pointerover Image.hot">
+      <Setter Property="IsVisible" Value="True"/>
+    </Style>
+    <Style Selector="Button.link">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="HorizontalAlignment" Value="Left"/>
+      <Setter Property="HorizontalContentAlignment" Value="Left"/>
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="FocusAdorner" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <ControlTemplate>
+          <TextBlock Text="{TemplateBinding Content}"
+                     Foreground="{TemplateBinding Foreground}"
+                     FontSize="{TemplateBinding FontSize}"
+                     VerticalAlignment="Center"/>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="Button.link:pointerover">
+      <Setter Property="Foreground" Value="#4B1509"/>
+    </Style>
+    <Style Selector="Button.tab">
+      <Setter Property="Background" Value="Black"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Padding" Value="10,0"/>
+      <Setter Property="MinWidth" Value="90"/>
+      <Setter Property="Height" Value="26"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="FocusAdorner" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Border Background="{TemplateBinding Background}">
+            <ContentPresenter Content="{TemplateBinding Content}"
+                              HorizontalContentAlignment="Center"
+                              VerticalContentAlignment="Center"/>
+          </Border>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="Button.tab:pointerover">
+      <Setter Property="Background" Value="#1F1F1F"/>
+    </Style>
+    <Style Selector="Button.tab.on">
+      <Setter Property="Background" Value="#1F1F1F"/>
+    </Style>
+    <Style Selector="ListBox.tracks">
+      <Setter Property="Background" Value="Black"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Padding" Value="0"/>
+    </Style>
+    <Style Selector="ListBox.tracks ListBoxItem">
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="Margin" Value="0"/>
+      <Setter Property="MinHeight" Value="36"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="FocusAdorner" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Border Background="{TemplateBinding Background}">
+            <ContentPresenter Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"/>
+          </Border>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="ListBox.tracks ListBoxItem:pointerover">
+      <Setter Property="Background" Value="#161616"/>
+    </Style>
+    <Style Selector="ListBox.tracks ListBoxItem:selected">
+      <Setter Property="Background" Value="#0C0C0C"/>
+    </Style>
+    <Style Selector="ListBox.tracks ListBoxItem:selected TextBlock.title">
+      <Setter Property="Foreground" Value="White"/>
+    </Style>
+    <Style Selector="TextBox.search">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Foreground" Value="Gray"/>
+      <Setter Property="CaretBrush" Value="White"/>
+      <Setter Property="BorderThickness" Value="0,0,0,1"/>
+      <Setter Property="BorderBrush" Value="#333333"/>
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="Padding" Value="4,4"/>
+    </Style>
+    <Style Selector="Slider.thin">
+      <Setter Property="Foreground" Value="#BF3517"/>
+      <Setter Property="Background" Value="#1F1F1F"/>
+      <Setter Property="Height" Value="8"/>
+    </Style>
+  </Window.Styles>
+
+  <Grid x:Name="Root" RowDefinitions="94,47,*,23,36" Background="Black">
+    <Grid Grid.Row="0" Background="Black" PointerPressed="Chrome_PointerPressed">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="27"/>
+        <RowDefinition Height="14"/>
+        <RowDefinition Height="32"/>
+        <RowDefinition Height="21"/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="110"/>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="32"/>
+      </Grid.ColumnDefinitions>
+      <Border Grid.RowSpan="4" Background="#BF3517"/>
+      <TextBlock Grid.Row="0" Text="Player" Foreground="White" FontSize="26" FontWeight="Light" Margin="4,-2,0,0" FontFamily="Roboto, Inter"/>
+      <Button Classes="link" Content="equalizer" Grid.Row="1" Margin="4,0,0,0" Height="14" Click="Equalizer_Click"/>
+      <Button Classes="link" Content="радио" Grid.Row="2" Margin="4,0,0,0" VerticalAlignment="Top" Height="14" Click="Radio_Click"/>
+      <Button Classes="link" Content="папка" Grid.Row="2" Margin="4,16,0,0" VerticalAlignment="Top" Height="14" Click="Folder_Click"/>
+      <Button Classes="link" Content="..." Grid.Row="3" Margin="4,0,0,0" FontSize="22" Height="18" VerticalAlignment="Top"/>
+      <Button x:Name="PlaylistToggle" Classes="link" Content="playlist" Grid.Row="3" Margin="36,2,0,0" Height="14" Click="PlaylistToggle_Click"/>
+
+      <TextBlock x:Name="TextTime" Grid.Column="1" Grid.Row="0" Text="00 : 00" Foreground="White" FontSize="22" Margin="8,0,0,0" VerticalAlignment="Center"/>
+      <TextBlock x:Name="BeginText" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Text="" Foreground="White" FontSize="12" Margin="8,0,8,0" TextTrimming="CharacterEllipsis"/>
+
+      <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,6,4,0" Spacing="2">
+        <Button Classes="flat" Width="8" Height="13" Click="Minimize_Click">
+          <Image Source="avares://MusicPlayer/Image/minimayz1.png" Width="8" Height="13"/>
+        </Button>
+        <Button Classes="flat" Width="8" Height="13" Click="Pin_Click">
+          <Image x:Name="PinImage" Source="avares://MusicPlayer/Image/button1.png" Width="8" Height="13"/>
+        </Button>
+        <Button Classes="flat" Width="8" Height="13" Click="Close_Click">
+          <Image Source="avares://MusicPlayer/Image/close1.png" Width="8" Height="13"/>
+        </Button>
+      </StackPanel>
+
+      <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" Spacing="8" Margin="8,0,0,0" VerticalAlignment="Center">
+        <Button Classes="transport" Width="31" Height="31" Click="Prev_Click">
+          <Image Source="avares://MusicPlayer/Image/prev1.png" Width="28" Height="28"/>
+        </Button>
+        <Button Classes="transport" Width="31" Height="31" Click="Play_Click">
+          <Image x:Name="PlayImage" Source="avares://MusicPlayer/Image/play1.png" Width="28" Height="28"/>
+        </Button>
+        <Button Classes="transport" Width="31" Height="31" Click="Next_Click">
+          <Image Source="avares://MusicPlayer/Image/next1.png" Width="28" Height="28"/>
+        </Button>
+        <Button Classes="transport" Width="31" Height="31" Click="Stop_Click">
+          <Image Source="avares://MusicPlayer/Image/stop1.png" Width="28" Height="28"/>
+        </Button>
+        <Button x:Name="VolumeButton" Classes="transport" Width="20" Height="31" Click="Mute_Click">
+          <Image Source="avares://MusicPlayer/Image/volum1.png" Width="18" Height="18"/>
+        </Button>
+        <Button x:Name="RepeatButton" Classes="transport" Width="20" Height="31" Click="Repeat_Click">
+          <Image Source="avares://MusicPlayer/Image/replay1.png" Width="18" Height="18"/>
+        </Button>
+        <Button x:Name="RandomButton" Classes="transport" Width="20" Height="31" Click="Random_Click">
+          <Image x:Name="RandomImage" Source="avares://MusicPlayer/Image/random1.png" Width="18" Height="18"/>
+        </Button>
+      </StackPanel>
+
+      <Slider x:Name="SeekSlider" Classes="thin" Grid.Column="1" Grid.Row="3" Margin="8,0,4,2" Minimum="0" Maximum="1" VerticalAlignment="Center" ValueChanged="Position_ValueChanged"/>
+      <Slider x:Name="Volume" Classes="thin" Grid.Column="2" Grid.Row="3" Margin="0,0,6,2" Minimum="0" Maximum="100" Value="50" VerticalAlignment="Center" ValueChanged="Volume_ValueChanged"/>
+    </Grid>
+
+    <Grid x:Name="PlaylistBar" Grid.Row="1" Background="Black" ColumnDefinitions="120,32,8,32,20,32,16,32,16,32,16,32,*">
+      <TextBlock Text="playlist" Foreground="White" FontSize="32" FontWeight="Light" Margin="4,0,0,0" VerticalAlignment="Center"/>
+      <Button Classes="flat" Grid.Column="1" Width="32" Height="32" Click="Add_Click" ToolTip.Tip="Добавить">
+        <Panel>
+          <Image Classes="idle" Source="avares://MusicPlayer/Image/add1.png" Width="28" Height="28"/>
+          <Image Classes="hot" Source="avares://MusicPlayer/Image/add2.png" Width="28" Height="28" IsVisible="False"/>
+        </Panel>
+      </Button>
+      <Button Classes="flat" Grid.Column="3" Width="32" Height="32" Click="Delete_Click" ToolTip.Tip="Удалить">
+        <Panel>
+          <Image Classes="idle" Source="avares://MusicPlayer/Image/delete1.png"/>
+          <Image Classes="hot" Source="avares://MusicPlayer/Image/delete2.png" IsVisible="False"/>
+        </Panel>
+      </Button>
+      <Button Classes="flat" Grid.Column="5" Width="32" Height="32" Click="PrevSheet_Click">
+        <Panel>
+          <Image Classes="idle" Source="avares://MusicPlayer/Image/pl_prev1.png"/>
+          <Image Classes="hot" Source="avares://MusicPlayer/Image/pl_prev2.png" IsVisible="False"/>
+        </Panel>
+      </Button>
+      <Button Classes="flat" Grid.Column="7" Width="32" Height="32" Click="NewPlaylist_Click">
+        <Panel>
+          <Image Classes="idle" Source="avares://MusicPlayer/Image/new_pl.png"/>
+          <Image Classes="hot" Source="avares://MusicPlayer/Image/new_pl2.png" IsVisible="False"/>
+        </Panel>
+      </Button>
+      <Button Classes="flat" Grid.Column="9" Width="32" Height="32" Click="NextSheet_Click">
+        <Panel>
+          <Image Classes="idle" Source="avares://MusicPlayer/Image/pl_next1.png"/>
+          <Image Classes="hot" Source="avares://MusicPlayer/Image/pl_next2.png" IsVisible="False"/>
+        </Panel>
+      </Button>
+      <Button Classes="flat" Grid.Column="11" Width="32" Height="32" Click="Folder_Click">
+        <Panel>
+          <Image Classes="idle" Source="avares://MusicPlayer/Image/any1.png"/>
+          <Image Classes="hot" Source="avares://MusicPlayer/Image/any2.png" IsVisible="False"/>
+        </Panel>
+      </Button>
+    </Grid>
+
+    <Grid x:Name="LibraryBody" Grid.Row="2" RowDefinitions="26,*" Background="Black">
+      <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+        <StackPanel x:Name="TabStrip" Orientation="Horizontal"/>
+      </ScrollViewer>
+      <ContentControl x:Name="TabBody" Grid.Row="1"/>
+    </Grid>
+
+    <Border x:Name="InfoBar" Grid.Row="3" Background="#0F0F0F"/>
+
+    <Border x:Name="FindPanel" Grid.Row="4" Background="#202020" Padding="4,3">
+      <TextBox x:Name="FindText" Classes="search" TextChanged="FindText_TextChanged"/>
+    </Border>
+
+    <Button Classes="flat" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,6,0" Width="32" Height="32" Click="Sort_Click">
+      <Panel>
+        <Image Classes="idle" Source="avares://MusicPlayer/Image/sort1.png"/>
+        <Image Classes="hot" Source="avares://MusicPlayer/Image/sort2.png" IsVisible="False"/>
+      </Panel>
+    </Button>
+
+    <Thumb x:Name="ResizeGrip" Grid.Row="4" Width="14" Height="14" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+           Cursor="BottomRightCorner" DragDelta="Resize_Drag"/>
+  </Grid>
+</Window>

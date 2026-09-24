@@ -45,10 +45,7 @@ namespace MusicPlayer.domain
 
     public static class LibraryStore
     {
-        public static string FilePath
-        {
-            get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "library.xml"); }
-        }
+        public static string FilePath { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "library.xml");
 
         public static LibraryFile Load()
         {
