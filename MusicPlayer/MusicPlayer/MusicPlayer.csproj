@@ -105,19 +105,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="domain\bass\Eq.cs" />
+    <Compile Include="domain\LibraryStore.cs" />
     <Compile Include="domain\PlayList.cs" />
-    <Compile Include="domain\local\LocalAudio.cs" />
-    <Compile Include="domain\TypeMusic.cs" />
-    <Compile Include="domain\vk\VKAlbom.cs" />
-    <Compile Include="domain\vk\VKAudio.cs" />
-    <Compile Include="domain\vk\VKGroup.cs" />
-    <Compile Include="domain\vk\VKHelper.cs" />
-    <Compile Include="domain\vk\VKUser.cs" />
+    <Compile Include="domain\local\LocalLibrary.cs" />
     <Page Include="EQ.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="LoginVK.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -130,13 +121,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="domain\Audio.cs" />
-    <Compile Include="domain\last.fm\LastFmHelper.cs" />
-    <Compile Include="domain\last.fm\LastFmTrack.cs" />
     <Compile Include="EQ.xaml.cs">
       <DependentUpon>EQ.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LoginVK.xaml.cs">
-      <DependentUpon>LoginVK.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

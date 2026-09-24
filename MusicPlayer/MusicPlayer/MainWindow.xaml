@@ -1918,7 +1918,7 @@
         </ToolBarPanel>    
 
         <TabControl x:Name="PlayListTabs" Template="{DynamicResource ScrollableTabControlTemplate}" ItemContainerStyle="{DynamicResource TabItemStyle1}" HorizontalAlignment="Left" Margin="0,146,0,59" Width="350" Style="{DynamicResource TabControlStyle1}">
-            <TabItem Header="My music" Style="{DynamicResource TabItemStyle1}"  Foreground="White" FontSize="16" FontFamily="Segoe UI Light" Background="White">
+            <TabItem Header="Музыка" Style="{DynamicResource TabItemStyle1}"  Foreground="White" FontSize="16" FontFamily="Segoe UI Light" Background="White">
                 <ListBox x:Name="PlayListBox" ItemContainerStyle="{DynamicResource ListBoxItemStyle1}" Background="Black" BorderBrush="Black" Foreground="#FF5D6655" Style="{DynamicResource ListBoxStyle2}" MouseDoubleClick="PlayListBox_MouseDoubleClick"/>
             </TabItem>
         </TabControl>
@@ -2000,12 +2000,12 @@
                     
                 </TextBlock>
                 <Rectangle Fill="#FFBF3517" Grid.Row="0" Grid.RowSpan="8" Grid.Column="0" />
-                <Button x:Name="GroupButton" Content="groups" Grid.Row="3" Grid.Column="0" Style="{DynamicResource ButtonStyle1}" Margin="4,5,47,2" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" Grid.RowSpan="2" Click="GroupButton_Click">
+                <Button x:Name="GroupButton" Content="папка" Grid.Row="3" Grid.Column="0" Style="{DynamicResource ButtonStyle1}" Margin="4,5,47,2" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" Grid.RowSpan="2" Click="GroupButton_Click">
                     <Button.ContextMenu>
                         <ContextMenu/>
                     </Button.ContextMenu>
                 </Button>
-                <Button x:Name="FriendsButton" Content="friends" Grid.Row="2" Style="{DynamicResource ButtonStyle1}" Margin="4,1,34,6" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" Grid.RowSpan="2"
+                <Button x:Name="FriendsButton" Content="радио" Grid.Row="2" Style="{DynamicResource ButtonStyle1}" Margin="4,1,34,6" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" Grid.RowSpan="2"
                 	Grid.Column="0" FontFamily="Gisha" Click="Button_Click_2"/>
                 <Button x:Name="EqualizerButton" Content="equalizer" Grid.Row="1" Grid.Column="0" Style="{DynamicResource ButtonStyle1}" Margin="4,1,34,9" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" Grid.RowSpan="2" Click="equalizerButton_Click">
                     <Button.ContextMenu>
@@ -2014,7 +2014,7 @@
                 </Button>
                 <Button Content="..." Grid.Row="5" Style="{DynamicResource ButtonStyle2}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" HorizontalAlignment="Right" Width="39.5" Margin="0,2.837,0,2.163" Grid.RowSpan="2"
                 	Grid.Column="0" />
-                <TextBlock Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" Text="VKMP 2" HorizontalAlignment="Left" Margin="4.226,-2.672,0,4" Foreground="White" FontFamily="Roboto" FontSize="26.667"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" Text="Player" HorizontalAlignment="Left" Margin="4.226,-2.672,0,4" Foreground="White" FontFamily="Roboto" FontSize="26.667"/>
                 <Button Content="playlist" x:Name="ViziblePlayList" Grid.Row="5" Grid.Column="0"
                 	Style="{DynamicResource ButtonStyle1}" Margin="3.67,-1.997,28.163,-1.337" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="14" FontFamily="Gisha" d:LayoutOverrides="VerticalMargin" Click="ViziblePlayList_Click"/>
                 <Button x:Name="CloseApp" Content="" Style="{DynamicResource ButtonStyle12}" Grid.Row="0" Grid.Column="12" HorizontalAlignment="Left" Height="13" Margin="20,4,0,0" VerticalAlignment="Top" Width="8" Click="CloseApp_Click" RenderTransformOrigin="0.472,0.487"/>
